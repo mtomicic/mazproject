@@ -48,6 +48,7 @@ public class MazeImp{
 				
 				int dir_x =  neighbour.getxPos() - curr.getxPos();
 				int dir_y =  neighbour.getyPos() - curr.getyPos();
+				//System.out.println("node " + curr + " is connected to " + neighbour);
 				if(dir_x == -1){
 					curr.setWest(neighbour);
 					neighbour.setEast(curr);
@@ -58,18 +59,18 @@ public class MazeImp{
 				}
 				if(dir_x == 0){
 					if(dir_y == 1){
-						curr.setNorth(neighbour);
-						neighbour.setSouth(curr);
-					}
-					if(dir_y == -1){
 						curr.setSouth(neighbour);
 						neighbour.setNorth(curr);
+					}
+					if(dir_y == -1){
+						curr.setNorth(neighbour);
+						neighbour.setSouth(curr);
 					}
 				}
 				//System.out.println("neighbour :" + neighbour);
 			}
 		}
-		addTreasure();
+		//addTreasure();
 	}
 
 	
@@ -134,14 +135,11 @@ public class MazeImp{
 		
 		for(int i = 0; i < xSize; i++){
 			for(int j = 0; j< ySize; j++){
-				if(grid[i][j].isTreasure()){
-					charMaze[2*i+1][2*j+1] = 'T';
-				}
-				if(grid[i][j].isConnected(0,1)){ //North
-					charMaze[2*i+1][2*j+2] = ' ';
-				}
-				if(grid[i][j].isConnected(0,-1)){ //South
+				if(grid[i][j].isConnected(0,-1)){ //North
 					charMaze[2*i+1][2*j] = ' ';
+				}
+				if(grid[i][j].isConnected(0,1)){ //South
+					charMaze[2*i+1][2*j+2] = ' ';
 				}
 				if(grid[i][j].isConnected(1,0)){ //East
 					charMaze[2*i+2][2*j+1] = ' ';
@@ -156,28 +154,47 @@ public class MazeImp{
 		return charMaze;
 	}
 	
-	public void showPath(char[][] charMaze,ArrayList<Node> path){
-		int x, dx;
-		int y, dy;
-		for(int i = 0; i < path.size() - 1; i++){
-			x = path.get(i).getxPos();
-			y = path.get(i).getyPos();
-			charMaze[x*2 + 1][y*2 + 1] = 'p';
-			dx = path.get(i+1).getxPos() - x;
-			dy = path.get(i+1).getyPos() - y;
-			if(dx == 1){
-				charMaze[x*2 + 2][y*2 + 1] = 'p';
-			}else if(dx == -1){
-				charMaze[x*2 + 0][y*2 + 1] = 'p';
-			}else{
-				if(dy == 1){
-					charMaze[x*2 + 1][y*2 + 2] = 'p';
-				}else if(dy == -1){
-					charMaze[x*2 + 1][y*2 + 0] = 'p';
-				}
+	public void dumpMaze() {
+		int x = xSize;
+		int y = ySize;
+		char[][] charMaze = this.getCharMaze();
+	
+		System.out.println();
+		for(int j = 0; j < 2*y+1; j++){
+			for(int i = 0; i< 2*x+1; i++){
+				System.out.print(charMaze[i][j] + " ");
 			}
+			System.out.println();
+		}
+		System.out.println();
+		
+		for(int j = 0; j < y; j++){
+			
+			for(int i = 0; i< x; i++){
+				System.out.print(grid[j][i] + " ");
+				System.out.print("north" + grid[i][j].north + " ");
+				System.out.print("east" + grid[i][j].east  + " ");
+				System.out.print("south" + grid[i][j].south  + " ");
+				System.out.print("west" + grid[i][j].west  + " ");
+			}
+			System.out.println();
+		}
+		System.out.println();
+	}
+	
+	public void showPath(ArrayList<Node> path){
+		for(int i = 0; i < path.size() - 1; i++){
+			path.get(i).setPath(true);
 		}
 	}
+	
+	public void clearPath(ArrayList<Node> path){
+		for(int i = 0; i < path.size() - 1; i++){
+			path.get(i).setPath(false);
+		}
+	}
+	
+	
 
 	public ArrayList<Node> getPath(Node start, Node goal, Heuristic h){
 		PriorityQueue<State> open = new PriorityQueue<State>(11, new Comparator<State>(){
@@ -259,7 +276,7 @@ public class MazeImp{
 				if(!grid[randx][randy].treasure){
 					grid[randx][randy].setTreasure(true);
 					finished = true;
-					System.out.println(randx +" " +randy);
+					//System.out.println(randx +" " +randy);
 				}
 			}
 		}

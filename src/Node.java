@@ -11,6 +11,7 @@ public class Node {
 		yPos = y;
 		inMaze = false;
 		treasure = false;
+		path = false;
 	}
 	
 	
@@ -99,28 +100,25 @@ public class Node {
 	public int[] getWalls(){
 		//ArrayList<Character> connections = new ArrayList<Character>();
 		int[] connections = new int[4];
-		if(north == null){//wall
-			connections[0] = 1;
-		} else {
-			connections[0] = 0;
-		}
-		if(east == null){
-			connections[1] = 1;
-		} else {
-			connections[1] = 0;
-		}
-		if(south == null){
-			connections[2] = 1;
-		} else {
-			connections[2] = 0;
-		}
-		if(west == null){
-			connections[3] = 1;
-		} else {
+		if(this.isConnected(0, -1)){//wall
 			connections[3] = 0;
+		} else {
+			connections[3] = 1;
 		}
-		for(int i = 0; i < 4; i ++){
-			System.out.println(connections[i]);
+		if(this.isConnected(1, 0)){
+			connections[2] = 0;
+		} else {
+			connections[2] = 1;
+		}
+		if(this.isConnected(0, 1)){
+			connections[1] = 0;
+		} else {
+			connections[1] = 1;
+		}
+		if(this.isConnected(-1, 0)){
+			connections[0] = 0;
+		} else {
+			connections[0] = 1;
 		}
 		return connections;
 	}
@@ -159,14 +157,14 @@ public class Node {
 			}
 		}
 		if(dir_x == 0){
-			if(dir_y == -1){
+			if(dir_y == 1){
 				if(south != null){
 					return true;
 				}else{
 					return false;
 				}
 			}
-			if(dir_y == 1){
+			if(dir_y == -1){
 				if(north != null){
 					return true;
 				}else{
@@ -176,16 +174,25 @@ public class Node {
 		}
 		return false;
 	}
-
-		
+	
+	public void setPath(boolean p) {
+		path = p;
+	}
+	
+	public boolean isOnPath() {
+		return path;
+	}
 	
 	boolean inMaze;
 	boolean treasure;
+	boolean path;
 	Node north;
 	Node south;
 	Node east;
 	Node west;
 	int xPos;
 	int yPos;
+	
+	
 	
 }

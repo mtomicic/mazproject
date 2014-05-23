@@ -128,7 +128,7 @@ public class MazeFrame extends JFrame{
 		goEasy = new AbstractAction("Easy"){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				board = new Board(15, 15);
+				board = new Board(4, 4);
 				gameScreen.add(board, BorderLayout.CENTER);
 				layout.show(mainPanel, "game");
 				menuScreen.requestFocusInWindow();
@@ -173,7 +173,7 @@ public class MazeFrame extends JFrame{
 		drawPath = new AbstractAction("Help"){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				board.drawPath();
+				//board.drawPath();
 				gameScreen.getComponent(1).requestFocus();
 			}
 		};
