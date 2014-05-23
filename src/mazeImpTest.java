@@ -1,13 +1,13 @@
-import static org.junit.Assert.*;
+//import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import org.junit.Before;
-import org.junit.Test;
+//import org.junit.Before;
+//import org.junit.Test;
 
 
 public class mazeImpTest {
-
+/*
 	@Before
 	public void setUp() throws Exception {
 	}
@@ -32,5 +32,5 @@ public class mazeImpTest {
 	
 		System.out.println();
 	}
-
+*/
 }

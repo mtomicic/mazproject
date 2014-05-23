@@ -60,10 +60,23 @@ public class MazeFrame extends JFrame{
 		gameScreen.setLayout(new BorderLayout());
 		JButton retMainMenu = new JButton(goMenu);
 		JButton helpButton = new JButton(drawPath);
+		retMainMenu.setSize(20, 20);
+		helpButton.setSize(20, 20);
 		JPanel gameMenu = new JPanel();
-		gameMenu.setLayout(new FlowLayout());
-		gameMenu.add(retMainMenu);
-		gameMenu.add(helpButton);
+		gameMenu.setLayout(new GridBagLayout());
+		GridBagConstraints gc =  new GridBagConstraints();
+		gc.weightx = 0;
+		gc.weighty = 0;
+		gc.gridx = 0;
+		gc.gridy = 0;
+		//gc.anchor = GridBagConstraints.;
+		gameMenu.add(retMainMenu, gc);
+		gc.ipadx = 40;
+		gc.gridx = 0;
+		gc.gridy = 1;
+		gc.weightx = 0;
+		gc.weighty = 0;
+		gameMenu.add(helpButton, gc);
 		gameScreen.add(gameMenu, BorderLayout.LINE_END);
 	}
 	
