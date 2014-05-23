@@ -10,6 +10,7 @@ public class Node {
 		xPos = x;
 		yPos = y;
 		inMaze = false;
+		treasure = false;
 	}
 	
 	
@@ -80,6 +81,13 @@ public class Node {
 		inMaze = true;
 	}
 
+	public boolean isTreasure() {
+		return treasure;
+	}
+
+	public void setTreasure(boolean treasure) {
+		this.treasure = treasure;
+	}
 
 	/**
 	 * @return the inMaze
@@ -87,6 +95,36 @@ public class Node {
 	public boolean isInMaze() {
 		return inMaze;
 	}
+	
+	public int[] getWalls(){
+		//ArrayList<Character> connections = new ArrayList<Character>();
+		int[] connections = new int[4];
+		if(north == null){//wall
+			connections[0] = 1;
+		} else {
+			connections[0] = 0;
+		}
+		if(east == null){
+			connections[1] = 1;
+		} else {
+			connections[1] = 0;
+		}
+		if(south == null){
+			connections[2] = 1;
+		} else {
+			connections[2] = 0;
+		}
+		if(west == null){
+			connections[3] = 1;
+		} else {
+			connections[3] = 0;
+		}
+		for(int i = 0; i < 4; i ++){
+			System.out.println(connections[i]);
+		}
+		return connections;
+	}
+	
 	
 	@Override
 	public String toString(){
@@ -142,6 +180,7 @@ public class Node {
 		
 	
 	boolean inMaze;
+	boolean treasure;
 	Node north;
 	Node south;
 	Node east;

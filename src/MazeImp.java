@@ -69,6 +69,7 @@ public class MazeImp{
 				//System.out.println("neighbour :" + neighbour);
 			}
 		}
+		addTreasure();
 	}
 
 	
@@ -133,6 +134,9 @@ public class MazeImp{
 		
 		for(int i = 0; i < xSize; i++){
 			for(int j = 0; j< ySize; j++){
+				if(grid[i][j].isTreasure()){
+					charMaze[2*i+1][2*j+1] = 'T';
+				}
 				if(grid[i][j].isConnected(0,1)){ //North
 					charMaze[2*i+1][2*j+2] = ' ';
 				}
@@ -243,6 +247,28 @@ public class MazeImp{
 		return path;
 	}
 	
+	private void addTreasure(){
+		Random rn = new Random();
+		
+		boolean finished = false;
+		while(!finished){
+			int randx = rn.nextInt(xSize-2)+1;
+			int randy = rn.nextInt(ySize-2)+1;
+			if((grid[randx][randy].east == null) && (grid[randx][randy].west == null)
+			  ||(grid[randx][randy].south == null) && (grid[randx][randy].north == null)){
+				if(!grid[randx][randy].treasure){
+					grid[randx][randy].setTreasure(true);
+					finished = true;
+					System.out.println(randx +" " +randy);
+				}
+			}
+		}
+		
+	}
+	
+	public int[] getWallType(int xPos, int yPos){  
+		return grid[xPos][yPos].getWalls();
+	}
 	
 	
 	/**

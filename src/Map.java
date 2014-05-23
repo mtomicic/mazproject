@@ -9,10 +9,11 @@ import javax.swing.ImageIcon;
 public class Map {
 	
 	private Scanner sc;
-	private char map[][];
-	private Image grass, wall, pathhint;
 	
-	public Map(char[][] charMaze) {
+	private Image grass, wall, pathhint;
+	private Image[][][][] imageBank;
+	
+	public Map() {
 		
 		ImageIcon img = new ImageIcon("images/grass_10.jpg");
 		grass = img.getImage();
@@ -20,15 +21,21 @@ public class Map {
 		wall = img.getImage();
 		img = new ImageIcon("images/pathhint_10.png");
 		pathhint = img.getImage();
+		img = new ImageIcon("");
+		imageBank = new Image[2][2][2][2];//[n][e][s][w]
+		
 		//openFile();
 		//readFile();
 		//closeFile();
-		map = charMaze;
 		
 	}
 	
-	public void setMap(char[][] m){
-		map = m;
+	
+	
+
+	public Image getImage(int[] walls){
+		//if there is a wall
+		return imageBank[walls[0]][walls[1]][walls[2]][walls[3]];
 	}
 	
 	public Image getGrass() {
@@ -43,13 +50,6 @@ public class Map {
 		return pathhint;
 	}
 	
-	public char[][] getMap() {
-		return map;
-	}
-	
-	public char getMap(int x, int y) {
-		return map[x][y];
-	}
 /*	
 	public void openFile() {
 		

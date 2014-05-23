@@ -2,8 +2,6 @@
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -19,17 +17,17 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-public class MazeFrame extends JFrame{
+public class CopyOfMazeFrame extends JFrame{
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run(){
-			new MazeFrame();
+			new CopyOfMazeFrame();
 		}
 		
 		});
 	}
 	
-	public MazeFrame() {
+	public CopyOfMazeFrame() {
 		this.setTitle("MAZE GAME");	
 		mainPanel = new JPanel();
 		this.add(mainPanel);
@@ -41,7 +39,7 @@ public class MazeFrame extends JFrame{
 		initDifficultyScreen();
 		initCardLayout();
 		
-		this.setSize(665, 550);
+		this.setSize(500, 500);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(true);
@@ -62,38 +60,28 @@ public class MazeFrame extends JFrame{
 		gameScreen.setLayout(new BorderLayout());
 		JButton retMainMenu = new JButton(goMenu);
 		JButton helpButton = new JButton(drawPath);
-		//retMainMenu.setSize(20, 20);
-		//helpButton.setSize(20, 20);
+		retMainMenu.setSize(20, 20);
+		helpButton.setSize(20, 20);
 		JPanel gameMenu = new JPanel();
 		gameMenu.setLayout(new GridBagLayout());
-		GridBagConstraints gc = new GridBagConstraints();
-		gameMenu.setBackground(Color.GRAY);
-		
+		GridBagConstraints gc =  new GridBagConstraints();
 		gc.weightx = 0;
 		gc.weighty = 0;
 		gc.gridx = 0;
 		gc.gridy = 0;
-		gc.anchor = GridBagConstraints.PAGE_START;
+		//gc.anchor = GridBagConstraints.;
 		gameMenu.add(retMainMenu, gc);
-		//gc.ipadx = 45;
-		gc.fill = GridBagConstraints.HORIZONTAL;
+		gc.ipadx = 40;
 		gc.gridx = 0;
 		gc.gridy = 1;
 		gc.weightx = 0;
-		gc.weighty = 1;
+		gc.weighty = 0;
 		gameMenu.add(helpButton, gc);
 		gameScreen.add(gameMenu, BorderLayout.LINE_END);
 	}
 	
 	private void initDifficultyScreen(){
 		difficultyScreen = new JPanel();
-		
-		
-		
-		difficultyScreen.setBackground(Color.GRAY);
-		
-		
-		
 		difficultyScreen.setLayout(new GridBagLayout());
 		GridBagConstraints gc =  new GridBagConstraints();
 		JButton easyButton = new JButton(goEasy);
@@ -108,10 +96,9 @@ public class MazeFrame extends JFrame{
 		menuScreen = new JPanel();
 		menuScreen.setLayout(new GridBagLayout());
 		GridBagConstraints gc =  new GridBagConstraints();
-		menuScreen.setBackground(Color.GRAY);
+
 		
 		JButton startGame = new JButton(goDifficultySelect);
-		
 		menuScreen.add(startGame);
 		
 	}
@@ -141,7 +128,6 @@ public class MazeFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				board = new Board(20, 20);
 				gameScreen.add(board, BorderLayout.CENTER);
-				gameScreen.setBackground(Color.GRAY);
 				layout.show(mainPanel, "game");
 				menuScreen.requestFocusInWindow();
 				gameScreen.getComponent(1).requestFocus();
@@ -153,7 +139,6 @@ public class MazeFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				board = new Board(25, 25);
 				gameScreen.add(board, BorderLayout.CENTER);
-				gameScreen.setBackground(Color.GRAY);
 				layout.show(mainPanel, "game");
 				menuScreen.requestFocusInWindow();
 				gameScreen.getComponent(1).requestFocus();

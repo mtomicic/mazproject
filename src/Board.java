@@ -23,7 +23,7 @@ public class Board extends JPanel implements ActionListener{
 		mapHeight = 2*y + 1;
 		testMaze = new MazeImp(x,y);
 		
-		map = new Map(testMaze.getCharMaze());
+		map = new Map();
 		player = new Player(1,1);
 		addKeyListener(new Al());
 		setFocusable(true);
@@ -43,19 +43,18 @@ public class Board extends JPanel implements ActionListener{
 		//g.fillRect(45, 60, 32, 32);
 		for (int y = 0; y < mapHeight; y++) {
 			for (int x = 0; x < mapWidth; x++) {
-				if (map.getMap(x, y) == (' ')) {
-					g.drawImage(map.getGrass(), x*10, y*10, null);
-				} else if (map.getMap(x, y) == ('#')) {
-					g.drawImage(map.getWall(), x*10, y*10, null);
-				}else if(map.getMap(x,y) == ('p')){
-					g.drawImage(map.getPathHint(), x*10, y*10, null);
-				}
+				g.drawImage(map.getImage(testMaze.getCell(x, y).getWalls()),x*10, y*10, null);
 			}
+			/*
+				if (testMaze.getCell(x, y).getWalls()[]) {
+					g.drawImage(map.getGrass(), x*10, y*10, null);
+
+			}*/
 		}
 		
 		g.drawImage(player.getPlayer(), player.getX() * 10, player.getY() * 10, null);
 	}
-	
+	/*
 	public class Al extends KeyAdapter {
 		
 		public void keyPressed(KeyEvent e) {
@@ -63,7 +62,7 @@ public class Board extends JPanel implements ActionListener{
 			
 			if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
 				erasePath();
-				if (!(map.getMap(player.getX(), player.getY() - 1) == '#')) {
+				if (!(mazeImp.getMap(player.getX(), player.getY() - 1) == '#')) {
 					player.move(0, -1);			
 				}
 			} else if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
@@ -94,6 +93,7 @@ public class Board extends JPanel implements ActionListener{
 		}
 		
 	}
+	*/
 	
 	private void erasePath(){
 		map.setMap(testMaze.getCharMaze());
