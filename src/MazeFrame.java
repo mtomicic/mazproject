@@ -104,10 +104,10 @@ public class MazeFrame extends JFrame{
 		//Timer time = new Tim
 
 		
-		timeLabel.setFont(new Font(timeLabel.getFont().getName(), Font.BOLD, 22));
+		timeLabel.setFont(new Font(timeLabel.getFont().getName(), Font.BOLD, 18));
 		timeLabel.setForeground(Color.YELLOW);
 		
-		scoreLabel.setFont(new Font(timeLabel.getFont().getName(), Font.BOLD, 22));
+		scoreLabel.setFont(new Font(timeLabel.getFont().getName(), Font.BOLD, 18));
 		scoreLabel.setForeground(Color.YELLOW);
 		//timeLabel.setPreferredSize(new Dimension(50,20));
 //		timeLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -148,9 +148,12 @@ public class MazeFrame extends JFrame{
 		gc.weighty = 1;
 		gameMenu.add(helpButton, gc);
 		gc.gridy = 2;
-		gc.weighty = 3;
-		gameMenu.add(timeLabel,gc);
+		gc.weighty = 100;
+		gc.ipady = 0;
 		gameMenu.add(scoreLabel, gc);
+		gc.gridy = 3;
+		gc.weighty = 200;
+		gameMenu.add(timeLabel,gc);
 		gameScreen.add(gameMenu, BorderLayout.LINE_END);
 	}
 	
@@ -275,6 +278,7 @@ public class MazeFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				layout.show(mainPanel, "diff");
+				scoreLabel.setText("Score: " + 0);
 				difficultyScreen.requestFocusInWindow();
 			}
 		};
@@ -346,6 +350,7 @@ public class MazeFrame extends JFrame{
 				timer.restart();
 				timer.stop();
 				timeLabel.setText(timeCount + " sec");
+				scoreLabel.setText("Score: " + 0);
 				howToPlay.setVisible(false);
 				frame.setMinimumSize(new Dimension(463,390));
 				frame.pack();
