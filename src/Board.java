@@ -11,11 +11,20 @@ import javax.swing.*;
 
 public class Board extends JPanel implements ActionListener{
 	
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run(){
+			maze = new MazeFrame();
+		}
+		
+		});
+	}
 	private Timer timer;
 	private Map map;
 	private MazeImp mazeModel;
 	private int mapWidth;
 	private int mapHeight;
+	private static MazeFrame maze;
 
 	
 	public Board(MazeImp m) {
@@ -25,7 +34,7 @@ public class Board extends JPanel implements ActionListener{
 		
 		map = new Map();
 		addKeyListener(new Al());
-		
+		mazeModel.addMazeListener(new boardListener());
 		setFocusable(true);
 		
 		//testMaze.dumpMaze();
@@ -36,7 +45,7 @@ public class Board extends JPanel implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		//repaint();
+		repaint();
 	}
 	
 	public void paint(Graphics g) {
@@ -48,22 +57,14 @@ public class Board extends JPanel implements ActionListener{
 				Node cell = mazeModel.getCell(x, y);
 				g.drawImage(map.getImage(cell.getWalls()),x*14, y*14, null);
 				//g.drawImage(map.getGrass(), x*10, y*10, null);
+				
 	
 			}
 		}
 		//System.out.println("fin");
 		g.drawImage(mazeModel.getPlayer().getPlayer(), mazeModel.getPlayer().getX() * 14 + 2, mazeModel.getPlayer().getY() * 14 + 2, null);
-		
-
-		ArrayList<Treasure> treasures= mazeModel.getTreasure();
-		for(Treasure t: treasures){
-			g.drawImage(map.getTreasureImg(), t.getX() * 14 + 7, t.getY() * 14 + 7, null);
-			System.out.println("treasure");
-		}
 	}
 	
-
-
 	public class Al extends KeyAdapter {
 		
 		public void keyPressed(KeyEvent e) {
@@ -76,7 +77,12 @@ public class Board extends JPanel implements ActionListener{
 			} else if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
 				mazeModel.movePlayer(-1, 0);			
 			} else if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
-				mazeModel.movePlayer(1, 0);			
+				mazeModel.movePlayer(1, 0);		
+			}
+			
+			if((mazeModel.getPlayer().getX() + 1) == mapWidth && (mazeModel.getPlayer().getY() + 1) == mapHeight){ // for old board change to  +2
+				System.out.println("win");
+				maze.showWin();
 			}
 		}
 		
@@ -90,7 +96,25 @@ public class Board extends JPanel implements ActionListener{
 		
 	}
 	
-	
+	public class boardListener implements MazeListener{
+
+		@Override
+		public void playerMoved(EventObject e) {
+			repaint();
+		}
+
+		@Override
+		public void mazeRestarted(EventObject e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void playerFinished(EventObject e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
 	/*
 
 	public void drawPath(Graphics g) {
