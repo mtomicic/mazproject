@@ -86,10 +86,6 @@ public class Board extends JPanel implements ActionListener{
 				mazeModel.movePlayer(1, 0);		
 			}
 			
-			if((mazeModel.getPlayer().getX() + 1) == mapWidth && (mazeModel.getPlayer().getY() + 1) == mapHeight){ // for old board change to  +2
-				System.out.println("win");
-				maze.showWin();
-			}
 		}
 		
 		public void keyReleased(KeyEvent e) {
@@ -118,13 +114,14 @@ public class Board extends JPanel implements ActionListener{
 		@Override
 		public void playerFinished(EventObject e) {
 			// TODO Auto-generated method stub
-			
+			System.out.println("winner");
+			maze.showWin();
 		}
 
 		@Override
 		public void treasureCollected(EventObject e) {
 			// TODO Auto-generated method stub
-			
+			maze.removeTime(2);
 		}
 	}
 	/*
