@@ -75,6 +75,7 @@ public class MazeFrame extends JFrame{
 		timer.restart();
 		timer.stop();
 		winTimeLabel.setText("Your time was " + timeCount + " seconds");
+		winScoreLabel.setText("Your score was " + maze.getPlayer().getMoney());
 		timeCount = 0;
 		timeLabel.setText(timeCount + " sec");
 		howToPlay.setVisible(false);
@@ -225,25 +226,33 @@ public class MazeFrame extends JFrame{
 		gc.anchor = GridBagConstraints.CENTER;
 		winScreen.setBackground(Color.GRAY);
 		JLabel winLabel = new JLabel("YOU WIN!!", SwingConstants.CENTER);
+		winLabel.setFont(new Font(winLabel.getFont().getName(), Font.BOLD, 30));
 		winLabel.setForeground(Color.YELLOW);
 		winTimeLabel = new JLabel("Your time was " + timeCount + " seconds", SwingConstants.CENTER);
 		winTimeLabel.setForeground(Color.YELLOW);
+		winScoreLabel = new JLabel("Your score was " + 0, SwingConstants.CENTER);
+		winScoreLabel .setForeground(Color.YELLOW);
 		timeCount = 0;
-		gc.ipady = 20;
 		gc.ipadx = 78;
+		gc.ipady = 20;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.gridy = 0;
 //		gc.weighty = 1;
 		winScreen.add(winLabel, gc);
 		gc.gridy = 1;
+		gc.ipady = 0;
 		winScreen.add(winTimeLabel, gc);
 		gc.gridy = 2;
+		gc.ipady = 20;
+		winScreen.add(winScoreLabel, gc);
+		gc.gridy = 3;
+		gc.ipady = 20;
 		JButton playAgain = new JButton(goDifficultySelect);
 		playAgain.setText("Play Again");
 		winScreen.add(playAgain, gc);
 		
 		JButton menuButton = new JButton(goMenu);
-		gc.gridy = 3;
+		gc.gridy = 4;
 		gc.ipadx = 76;
 		winScreen.add(menuButton, gc);
 	}
@@ -438,4 +447,5 @@ public class MazeFrame extends JFrame{
 	
 	private JTextArea howToPlay;
 	private JLabel winTimeLabel;
+	private JLabel winScoreLabel;
 }
