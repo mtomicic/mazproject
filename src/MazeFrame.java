@@ -51,6 +51,11 @@ public class MazeFrame extends JFrame{
 		
 	}
 	
+	public void removeTime(int timeRemoved){
+		timeCount -= timeRemoved;
+		timeLabel.setText(timeCount + " sec");
+	}
+	
 	public void showWin(){
 		if(board != null){
 			gameScreen.remove(board);
