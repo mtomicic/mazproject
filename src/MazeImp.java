@@ -1,15 +1,19 @@
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.EventObject;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Random;
+
+import javax.swing.event.EventListenerList;
 
 
 
 
 public class MazeImp{
 	
+
 	public MazeImp(int x, int y){
 		xSize = x;
 		ySize = y;
@@ -22,6 +26,8 @@ public class MazeImp{
 		}
 		frontier = new ArrayList<Node>();
 		this.generate();
+		mazeListeners = new EventListenerList();
+		player = new Player(0,0);
 	}
 	
 	private void generate(){
@@ -283,6 +289,54 @@ public class MazeImp{
 		
 	}
 	
+	public void movePlayer(int dx, int dy){
+		if (playerCanMove(dx, dy)){
+			player.move(dx, dy);
+			firePlayerMoved();
+		}
+	}
+	
+	private boolean playerCanMove(int dx, int dy) {
+		Node pos = getCell(player.getX(), player.getY());
+		if(pos.isConnected(dx,dy)){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	public void addMazeListener(MazeListener listener){
+		mazeListeners.add(MazeListener.class, listener);
+	}
+	
+	public void removeMazeListener(MazeListener listener){
+		mazeListeners.remove(MazeListener.class, listener);
+	}
+	
+	public void firePlayerMoved(){
+		MazeListener[] listeners = mazeListeners.getListeners(MazeListener.class);
+		EventObject e = new EventObject(this);
+		for(MazeListener listener:listeners){
+			listener.playerMoved(e);
+		}
+	}
+	
+	public void fireMazeRestarted(){
+		MazeListener[] listeners = mazeListeners.getListeners(MazeListener.class);
+		EventObject e = new EventObject(this);
+		for(MazeListener listener:listeners){
+			listener.mazeRestarted(e);
+		}
+	}
+	
+	public void firePlayerFinished(){
+		MazeListener[] listeners = mazeListeners.getListeners(MazeListener.class);
+		EventObject e = new EventObject(this);
+		for(MazeListener listener:listeners){
+			listener.playerFinished(e);
+		}
+	}
+	
 	public int[] getWallType(int xPos, int yPos){  
 		return grid[xPos][yPos].getWalls();
 	}
@@ -305,11 +359,18 @@ public class MazeImp{
 	public Node getCell(int x, int y){
 		return grid[x][y];
 	}
+	
+	public Player getPlayer() {
+		// TODO Auto-generated method stub
+		return player;
+	}
 
 
 	int xSize;
 	int ySize;
 	ArrayList<Node> frontier;
 	Node[][] grid;
-
+	EventListenerList mazeListeners;
+	private Player player;
+	
 }

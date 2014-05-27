@@ -126,9 +126,12 @@ public class MazeFrame extends JFrame{
 		};
 		
 		goEasy = new AbstractAction("Easy"){
+			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				board = new Board(4, 4);
+				maze = new MazeImp(4,4);
+				board = new Board(maze);
 				gameScreen.add(board, BorderLayout.CENTER);
 				layout.show(mainPanel, "game");
 				menuScreen.requestFocusInWindow();
@@ -139,7 +142,8 @@ public class MazeFrame extends JFrame{
 		goMedium = new AbstractAction("Medium"){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				board = new Board(20, 20);
+				maze = new MazeImp(20,20);
+				board = new Board(maze);
 				gameScreen.add(board, BorderLayout.CENTER);
 				gameScreen.setBackground(Color.GRAY);
 				layout.show(mainPanel, "game");
@@ -151,7 +155,8 @@ public class MazeFrame extends JFrame{
 		goHard = new AbstractAction("Hard"){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				board = new Board(25, 25);
+				maze = new MazeImp(25,25);
+				board = new Board(maze);
 				gameScreen.add(board, BorderLayout.CENTER);
 				gameScreen.setBackground(Color.GRAY);
 				layout.show(mainPanel, "game");
@@ -180,7 +185,6 @@ public class MazeFrame extends JFrame{
 		
 	}
 	private JPanel mainPanel;
-	
 	private JPanel gameScreen;
 	private JPanel menuScreen;
 	private JPanel difficultyScreen;
@@ -193,5 +197,6 @@ public class MazeFrame extends JFrame{
 	private Action drawPath;
 
 	private Board board;
+	private MazeImp maze;
 	private CardLayout layout;
 }

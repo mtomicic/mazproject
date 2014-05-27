@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.GridBagLayout;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.EventObject;
 
 import javax.swing.*;
 
@@ -12,20 +13,19 @@ public class Board extends JPanel implements ActionListener{
 	
 	private Timer timer;
 	private Map map;
-	private MazeImp testMaze;
+	private MazeImp mazeModel;
 	private int mapWidth;
 	private int mapHeight;
-	private Player player;
+
 	
-	
-	public Board(int x, int y) {
-		mapWidth = x;
-		mapHeight = y;
-		testMaze = new MazeImp(x,y);
+	public Board(MazeImp m) {
+		mapWidth = m.getxSize();
+		mapHeight = m.getySize();
+		mazeModel = m;
 		
 		map = new Map();
-		player = new Player(0,0);
 		addKeyListener(new Al());
+		mazeModel.addMazeListener(new boardListener());
 		setFocusable(true);
 		
 		//testMaze.dumpMaze();
@@ -45,7 +45,7 @@ public class Board extends JPanel implements ActionListener{
 		for (int y = 0; y < mapHeight; y++) {
 			for (int x = 0; x < mapWidth; x++) {
 				//System.out.println("printing " + testMaze.getCell(x, y));
-				Node cell = testMaze.getCell(x, y);
+				Node cell = mazeModel.getCell(x, y);
 				g.drawImage(map.getImage(cell.getWalls()),x*14, y*14, null);
 				//g.drawImage(map.getGrass(), x*10, y*10, null);
 				
@@ -53,35 +53,22 @@ public class Board extends JPanel implements ActionListener{
 			}
 		}
 		//System.out.println("fin");
-		g.drawImage(player.getPlayer(), player.getX() * 14 + 2, player.getY() * 14 + 2, null);
+		g.drawImage(mazeModel.getPlayer().getPlayer(), mazeModel.getPlayer().getX() * 14 + 2, mazeModel.getPlayer().getY() * 14 + 2, null);
 	}
 	
 	public class Al extends KeyAdapter {
 		
 		public void keyPressed(KeyEvent e) {
 			int keyCode = e.getKeyCode();
-			System.out.println(testMaze.getCell(player.getX(), player.getY()));
+			System.out.println(mazeModel.getCell(mazeModel.getPlayer().getX(), mazeModel.getPlayer().getY()));
 			if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
-				
-				if ((testMaze.getCell(player.getX(), player.getY()).getNorth() != null)) {
-					player.move(0, -1);			
-				}
+				mazeModel.movePlayer(0, -1);			
 			} else if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
-				//VER1player.move(0, 100, 0, 1);
-				
-				if ((testMaze.getCell(player.getX(), player.getY()).getSouth() != null)) {
-					player.move(0, 1);			
-				}
+				mazeModel.movePlayer(0, 1);			
 			} else if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
-				
-				if ((testMaze.getCell(player.getX(), player.getY()).getWest() != null)) {
-					player.move(-1, 0);			
-				}
+				mazeModel.movePlayer(-1, 0);			
 			} else if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
-				
-				if ((testMaze.getCell(player.getX(), player.getY()).getEast() != null)) {
-					player.move(1, 0);			
-				}
+				mazeModel.movePlayer(1, 0);			
 			}
 		}
 		
@@ -95,8 +82,26 @@ public class Board extends JPanel implements ActionListener{
 		
 	}
 	
-	
+	public class boardListener implements MazeListener{
 
+		@Override
+		public void playerMoved(EventObject e) {
+			repaint();
+		}
+
+		@Override
+		public void mazeRestarted(EventObject e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void playerFinished(EventObject e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	/*
 
 	public void drawPath(Graphics g) {
 		
@@ -114,6 +119,6 @@ public class Board extends JPanel implements ActionListener{
 		}
 	
 	}
-	
+	*/
 	
 }
