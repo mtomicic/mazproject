@@ -11,14 +11,7 @@ import javax.swing.*;
 
 public class Board extends JPanel implements ActionListener{
 	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable(){
-		public void run(){
-			maze = new MazeFrame();
-		}
-		
-		});
-	}
+
 	private Timer timer;
 	private Map map;
 	private MazeImp mazeModel;
@@ -34,7 +27,7 @@ public class Board extends JPanel implements ActionListener{
 		
 		map = new Map();
 		addKeyListener(new Al());
-		mazeModel.addMazeListener(new boardListener());
+		
 		setFocusable(true);
 		
 		//testMaze.dumpMaze();
@@ -45,7 +38,7 @@ public class Board extends JPanel implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		repaint();
+		//
 	}
 	
 	public void paint(Graphics g) {
@@ -67,7 +60,6 @@ public class Board extends JPanel implements ActionListener{
 		ArrayList<Treasure> treasures= mazeModel.getTreasure();
 		for(Treasure t: treasures){
 		 	g.drawImage(map.getTreasureImg(), t.getX() * 14 + 7, t.getY() * 14 + 7, null);
-		 	//System.out.println("treasure");
 		}
 	}
 	
@@ -75,7 +67,7 @@ public class Board extends JPanel implements ActionListener{
 		
 		public void keyPressed(KeyEvent e) {
 			int keyCode = e.getKeyCode();
-			System.out.println(mazeModel.getCell(mazeModel.getPlayer().getX(), mazeModel.getPlayer().getY()));
+			//System.out.println(mazeModel.getCell(mazeModel.getPlayer().getX(), mazeModel.getPlayer().getY()));
 			if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
 				mazeModel.movePlayer(0, -1);			
 			} else if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
@@ -98,32 +90,7 @@ public class Board extends JPanel implements ActionListener{
 		
 	}
 	
-	public class boardListener implements MazeListener{
-
-		@Override
-		public void playerMoved(EventObject e) {
-			repaint();
-		}
-
-		@Override
-		public void mazeRestarted(EventObject e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void playerFinished(EventObject e) {
-			// TODO Auto-generated method stub
-			System.out.println("winner");
-			maze.showWin();
-		}
-
-		@Override
-		public void treasureCollected(EventObject e) {
-			// TODO Auto-generated method stub
-			maze.removeTime(2);
-		}
-	}
+	
 	/*
 
 	public void drawPath(Graphics g) {

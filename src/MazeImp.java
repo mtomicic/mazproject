@@ -302,6 +302,7 @@ public class MazeImp{
 			for(Treasure t:treasure){
 				if(player.getX() == t.getX() && player.getY() == t.getY()){
 					treasure.remove(t);
+					player.giveMoney(t.getValue());
 					fireTreasureCollected();
 					break;
 				}
@@ -400,6 +401,6 @@ public class MazeImp{
 	EventListenerList mazeListeners;
 	private Player player;
 	private ArrayList<Treasure> treasure;
-	
+
 	
 }

@@ -6,5 +6,12 @@ public class Treasure extends MazeObject {
 		value = 10;
 	}
 
+	/**
+	 * @return the value
+	 */
+	public int getValue() {
+		return value;
+	}
+	
 	int value;
 }

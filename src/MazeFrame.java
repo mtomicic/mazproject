@@ -11,6 +11,7 @@ import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.EventObject;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -26,7 +27,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 public class MazeFrame extends JFrame{
-
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run(){
+			new MazeFrame();
+		}
+		
+		});
+	}
 	
 	public MazeFrame() {
 		this.setTitle("MAZE GAME");	
@@ -55,6 +63,8 @@ public class MazeFrame extends JFrame{
 		timeCount -= timeRemoved;
 		timeLabel.setText(timeCount + " sec");
 	}
+	
+	
 	
 	public void showWin(){
 		if(board != null){
@@ -87,7 +97,7 @@ public class MazeFrame extends JFrame{
 		gameScreen.setLayout(new BorderLayout());
 		JButton retMainMenu = new JButton(goMenu);
 		JButton helpButton = new JButton(drawPath);
-
+		scoreLabel = new JLabel("Score: " + 0);
 		//retMainMenu.setSize(20, 20);
 		//helpButton.setSize(20, 20);
 		
@@ -96,6 +106,9 @@ public class MazeFrame extends JFrame{
 		
 		timeLabel.setFont(new Font(timeLabel.getFont().getName(), Font.BOLD, 22));
 		timeLabel.setForeground(Color.YELLOW);
+		
+		scoreLabel.setFont(new Font(timeLabel.getFont().getName(), Font.BOLD, 22));
+		scoreLabel.setForeground(Color.YELLOW);
 		//timeLabel.setPreferredSize(new Dimension(50,20));
 //		timeLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
 //		timeLabel.setPreferredSize(new Dimension(50,20));
@@ -137,6 +150,7 @@ public class MazeFrame extends JFrame{
 		gc.gridy = 2;
 		gc.weighty = 3;
 		gameMenu.add(timeLabel,gc);
+		gameMenu.add(scoreLabel, gc);
 		gameScreen.add(gameMenu, BorderLayout.LINE_END);
 	}
 	
@@ -273,6 +287,7 @@ public class MazeFrame extends JFrame{
 				timer.start();
 				maze = new MazeImp(15,15);
 				board = new Board(maze);
+				maze.addMazeListener(new boardListener());
 				gameScreen.add(board, BorderLayout.CENTER);
 				layout.show(mainPanel, "game");
 				menuScreen.requestFocusInWindow();
@@ -289,6 +304,7 @@ public class MazeFrame extends JFrame{
 				timer.start();
 				maze = new MazeImp(20,20);
 				board = new Board(maze);
+				maze.addMazeListener(new boardListener());
 				gameScreen.add(board, BorderLayout.CENTER);
 				gameScreen.setBackground(Color.GRAY);
 				layout.show(mainPanel, "game");
@@ -306,6 +322,7 @@ public class MazeFrame extends JFrame{
 				timer.start();
 				maze = new MazeImp(25,25);
 				board = new Board(maze);
+				maze.addMazeListener(new boardListener());
 				gameScreen.add(board, BorderLayout.CENTER);
 				gameScreen.setBackground(Color.GRAY);
 				layout.show(mainPanel, "game");
@@ -360,6 +377,35 @@ public class MazeFrame extends JFrame{
 			}
 		};
 	}
+	
+	
+	public class boardListener implements MazeListener{
+
+		@Override
+		public void playerMoved(EventObject e) {
+			board.repaint();
+		}
+
+		@Override
+		public void mazeRestarted(EventObject e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void playerFinished(EventObject e) {
+			// TODO Auto-generated method stub
+			showWin();
+		}
+
+		@Override
+		public void treasureCollected(EventObject e) {
+			// TODO Auto-generated method stub
+			//removeTime(2);
+			scoreLabel.setText("Score: " + maze.getPlayer().getMoney());
+		}
+	}
+	
 	private JPanel mainPanel;
 	private JPanel gameScreen;
 	private JPanel menuScreen;
@@ -382,6 +428,7 @@ public class MazeFrame extends JFrame{
 	
 	private int timeCount = 0;
 	private final JLabel timeLabel = new JLabel(timeCount + " sec", SwingConstants.RIGHT);
+	private JLabel scoreLabel;
 	private Timer timer;
 	
 	private JTextArea howToPlay;
