@@ -63,6 +63,12 @@ public class Board extends JPanel implements ActionListener{
 		}
 		//System.out.println("fin");
 		g.drawImage(mazeModel.getPlayer().getPlayer(), mazeModel.getPlayer().getX() * 14 + 2, mazeModel.getPlayer().getY() * 14 + 2, null);
+		
+		ArrayList<Treasure> treasures= mazeModel.getTreasure();
+		for(Treasure t: treasures){
+		 	g.drawImage(map.getTreasureImg(), t.getX() * 14 + 7, t.getY() * 14 + 7, null);
+		 	//System.out.println("treasure");
+		}
 	}
 	
 	public class Al extends KeyAdapter {
@@ -111,6 +117,12 @@ public class Board extends JPanel implements ActionListener{
 
 		@Override
 		public void playerFinished(EventObject e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void treasureCollected(EventObject e) {
 			// TODO Auto-generated method stub
 			
 		}
