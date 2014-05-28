@@ -10,4 +10,6 @@ public interface MazeListener extends EventListener {
 	public void mazeRestarted(EventObject e);
 	
 	public void playerFinished(EventObject e);
+	
+	public void treasureCollected(EventObject e);
 }

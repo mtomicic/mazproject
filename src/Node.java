@@ -182,6 +182,37 @@ public class Node {
 	public boolean isOnPath() {
 		return path;
 	}
+	@Override
+	public boolean equals(Object o){
+		if(((Node) o).getxPos() == this.xPos && ((Node) o).getyPos() == this.yPos){
+			return true;
+		}
+		return false;
+	}
+	/**
+	 * checks whether the node is a dead end or not
+	 * @return true if this node is a dead end
+	 */
+	public boolean isDeadEnd() {
+		int numberOfWalls = 0;
+		if(north == null){
+			numberOfWalls++;
+		}
+		if(south == null){
+			numberOfWalls++;
+		}
+		if(east == null){
+			numberOfWalls++;
+		}
+		if(west == null){
+			numberOfWalls++;
+		}
+		if(numberOfWalls == 3){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	
 	boolean inMaze;
 	boolean treasure;
@@ -192,6 +223,8 @@ public class Node {
 	Node west;
 	int xPos;
 	int yPos;
+	
+
 	
 	
 	

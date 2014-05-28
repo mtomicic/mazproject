@@ -27,7 +27,14 @@ public class MazeImp{
 		frontier = new ArrayList<Node>();
 		this.generate();
 		mazeListeners = new EventListenerList();
+		start = grid[0][0];
 		player = new Player(0,0);
+		Random rn = new Random();
+		int i = rn.nextInt(xSize);
+		int j = rn.nextInt(ySize);
+		end = grid[xSize-1][ySize-1];
+		treasure = new ArrayList<Treasure>();
+		addTreasure();
 	}
 	
 	private void generate(){
@@ -42,7 +49,7 @@ public class MazeImp{
 		//System.out.println("frontier" +frontier);
 		
 		while(!frontier.isEmpty()){
-			Node curr = frontier.remove(rn.nextInt(frontier.size()));
+			Node curr = frontier.remove(rn.nextInt(frontier.size())); //order n change to constant time
 			//System.out.println("current" +curr);
 			markCell(curr.getxPos(), curr.getyPos());
 			//System.out.println("frontier" +frontier);
@@ -273,16 +280,12 @@ public class MazeImp{
 	private void addTreasure(){
 		Random rn = new Random();
 		
-		boolean finished = false;
-		while(!finished){
-			int randx = rn.nextInt(xSize-2)+1;
-			int randy = rn.nextInt(ySize-2)+1;
-			if((grid[randx][randy].east == null) && (grid[randx][randy].west == null)
-			  ||(grid[randx][randy].south == null) && (grid[randx][randy].north == null)){
-				if(!grid[randx][randy].treasure){
-					grid[randx][randy].setTreasure(true);
-					finished = true;
-					//System.out.println(randx +" " +randy);
+		for(int i = 0; i < xSize; i++){
+			for(int j = 0; j < ySize; j++){
+				if(grid[i][j].isDeadEnd()){
+					if(rn.nextInt(100) >= 75){
+						treasure.add(new Treasure(i,j));
+					}
 				}
 			}
 		}
@@ -293,9 +296,28 @@ public class MazeImp{
 		if (playerCanMove(dx, dy)){
 			player.move(dx, dy);
 			firePlayerMoved();
+			if(grid[player.getX()][player.getY()].equals(end)){
+				firePlayerFinished();
+			}
+			for(Treasure t:treasure){
+				if(player.getX() == t.getX() && player.getY() == t.getY()){
+					treasure.remove(t);
+					fireTreasureCollected();
+					break;
+				}
+			}
+			
 		}
 	}
 	
+	private void fireTreasureCollected() {
+		MazeListener[] listeners = mazeListeners.getListeners(MazeListener.class);
+		EventObject e = new EventObject(this);
+		for(MazeListener listener:listeners){
+			listener.treasureCollected(e);
+		}
+	}
+
 	private boolean playerCanMove(int dx, int dy) {
 		Node pos = getCell(player.getX(), player.getY());
 		if(pos.isConnected(dx,dy)){
@@ -364,13 +386,20 @@ public class MazeImp{
 		// TODO Auto-generated method stub
 		return player;
 	}
+	
+	public ArrayList<Treasure> getTreasure() {
+		return (ArrayList<Treasure>) treasure.clone();
+	}
 
-
+	Node start;
+	Node end;
 	int xSize;
 	int ySize;
 	ArrayList<Node> frontier;
 	Node[][] grid;
 	EventListenerList mazeListeners;
 	private Player player;
+	private ArrayList<Treasure> treasure;
+	
 	
 }

@@ -24,6 +24,8 @@ public class Map {
 	private Image bottomLeftPath;
 
 	private Image bottomRightPath;
+
+	private Image treasure;
 	
 	public Map() {
 		ImageIcon img = new ImageIcon("images/grass_10.jpg");
@@ -80,6 +82,10 @@ public class Map {
 		bottomLeftPath = img.getImage();
 		img = new ImageIcon("images/path_10_10_bottom_right");
 		bottomRightPath = img.getImage();
+		
+		
+		img = new ImageIcon("images/treasure.png");
+		treasure = img.getImage();
 	}
 	
 	
@@ -101,8 +107,10 @@ public class Map {
 	public Image getPathHint() {
 		return pathhint;
 	}
-
-
+	
+	public Image getTreasureImg() {
+		return treasure;
+	}
 
 	/**
 	 * @return the pathhint
@@ -171,7 +179,9 @@ public class Map {
 	public Image getBottomRightPath() {
 		return bottomRightPath;
 	}
-	
+
+
+
 	
 /*	
 	public void openFile() {

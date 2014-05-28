@@ -9,6 +9,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
+import java.util.EventObject;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -126,12 +127,11 @@ public class MazeFrame extends JFrame{
 		};
 		
 		goEasy = new AbstractAction("Easy"){
-			
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				maze = new MazeImp(4,4);
 				board = new Board(maze);
+				maze.addMazeListener(new boardListener());
 				gameScreen.add(board, BorderLayout.CENTER);
 				layout.show(mainPanel, "game");
 				menuScreen.requestFocusInWindow();
@@ -144,6 +144,7 @@ public class MazeFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				maze = new MazeImp(20,20);
 				board = new Board(maze);
+				maze.addMazeListener(new boardListener());
 				gameScreen.add(board, BorderLayout.CENTER);
 				gameScreen.setBackground(Color.GRAY);
 				layout.show(mainPanel, "game");
@@ -157,6 +158,7 @@ public class MazeFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				maze = new MazeImp(25,25);
 				board = new Board(maze);
+				maze.addMazeListener(new boardListener());
 				gameScreen.add(board, BorderLayout.CENTER);
 				gameScreen.setBackground(Color.GRAY);
 				layout.show(mainPanel, "game");
@@ -184,6 +186,32 @@ public class MazeFrame extends JFrame{
 		};
 		
 	}
+	
+	public class boardListener implements MazeListener{
+
+		@Override
+		public void playerMoved(EventObject e) {
+			board.repaint();
+			//System.out.println("player moved");
+		}
+
+		@Override
+		public void mazeRestarted(EventObject e) {
+			board.repaint();
+		}
+
+		@Override
+		public void playerFinished(EventObject e) {
+			goMenu.actionPerformed(null);
+			System.out.println("finished");
+		}
+
+		@Override
+		public void treasureCollected(EventObject e) {
+			//
+		}
+	}
+	
 	private JPanel mainPanel;
 	private JPanel gameScreen;
 	private JPanel menuScreen;
