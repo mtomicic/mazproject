@@ -53,6 +53,7 @@ public class MazeFrame extends JFrame{
 		initDifficultyScreen();
 		initHowPlayScreen();
 		initWinScreen();
+		initLoseScreen();
 		initCardLayout();
 		
 		this.setSize(463,390);
@@ -79,7 +80,24 @@ public class MazeFrame extends JFrame{
 		winScreen.requestFocus();
 		timer.restart();
 		timer.stop();
-		winTimeLabel.setText("Your time was " + timeCount + " seconds");
+		winTimeLabel.setText("Your time was " + currentTime + " seconds");
+	//	winScoreLabel.setText("Your score was " + maze.getPlayer().getFuel());
+		timeCount = 0;
+		timeLabel.setText(timeCount + " sec");
+		howToPlay.setVisible(false);
+		frame.setMinimumSize(new Dimension(463,390));
+		frame.pack();
+	}
+	
+	
+	public void showLose(){
+		if(board != null){
+			gameScreen.remove(board);
+		}
+		layout.show(mainPanel, "lose");
+		loseScreen.requestFocus();
+		timer.restart();
+		timer.stop();
 	//	winScoreLabel.setText("Your score was " + maze.getPlayer().getFuel());
 		timeCount = 0;
 		timeLabel.setText(timeCount + " sec");
@@ -96,6 +114,7 @@ public class MazeFrame extends JFrame{
 		mainPanel.add(difficultyScreen, "diff");
 		mainPanel.add(howPlayScreen, "howPlay");
 		mainPanel.add(winScreen, "win");
+		mainPanel.add(loseScreen, "lose");
 	}
 	
 	private void initGameScreen(){
@@ -120,10 +139,9 @@ public class MazeFrame extends JFrame{
 		 ActionListener timerListener = new ActionListener() {
 		        public void actionPerformed(ActionEvent actionEvent) {
 		        	if (timeCount < 9999){
-		        		long currentTime =  System.currentTimeMillis() - timeStart;
+		        		currentTime =  System.currentTimeMillis() - timeStart;
 		        		currentTime = currentTime/1000;
 		        		timeLabel.setText(currentTime + " sec");
-			
 			        	maze.consumeFuel();
 			        	System.out.print(maze.getPlayer().getFuel());
 			        	scoreLabel.setText("Fuel: " + maze.getPlayer().getFuel());
@@ -247,7 +265,7 @@ public class MazeFrame extends JFrame{
 		JLabel winLabel = new JLabel("YOU WIN!!", SwingConstants.CENTER);
 		winLabel.setFont(new Font(winLabel.getFont().getName(), Font.BOLD, 30));
 		winLabel.setForeground(Color.YELLOW);
-		winTimeLabel = new JLabel("Your time was " + timeCount + " seconds", SwingConstants.CENTER);
+		winTimeLabel = new JLabel("Your time was " + currentTime + " seconds", SwingConstants.CENTER);
 		winTimeLabel.setForeground(Color.YELLOW);
 		//winScoreLabel = new JLabel("Your score was " + 0, SwingConstants.CENTER);
 		//winScoreLabel .setForeground(Color.YELLOW);
@@ -274,6 +292,45 @@ public class MazeFrame extends JFrame{
 		gc.gridy = 4;
 		gc.ipadx = 76;
 		winScreen.add(menuButton, gc);
+	}
+	
+	
+	private void initLoseScreen(){
+		loseScreen = new JPanel();
+		loseScreen.setLayout(new GridBagLayout());
+		GridBagConstraints gc =  new GridBagConstraints();
+		gc.anchor = GridBagConstraints.CENTER;
+		loseScreen.setBackground(Color.GRAY);
+		JLabel loseLabel = new JLabel("YOU LOSE!!", SwingConstants.CENTER);
+		loseLabel.setFont(new Font(loseLabel.getFont().getName(), Font.BOLD, 30));
+		loseLabel.setForeground(Color.YELLOW);
+		JLabel loseLabelFuel = new JLabel("You Ran Out Of Fuel", SwingConstants.CENTER);
+		loseLabelFuel.setForeground(Color.YELLOW);
+		//winScoreLabel = new JLabel("Your score was " + 0, SwingConstants.CENTER);
+		//winScoreLabel .setForeground(Color.YELLOW);
+		gc.ipadx = 78;
+		gc.ipady = 20;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.gridy = 0;
+//		gc.weighty = 1;
+		loseScreen.add(loseLabel, gc);
+		gc.gridy = 1;
+		gc.ipady = 0;
+		loseScreen.add(loseLabelFuel, gc);
+		gc.gridy = 2;
+		gc.ipady = 20;
+		//winScreen.add(winScoreLabel, gc);
+		gc.gridy = 3;
+		gc.ipady = 20;
+		JButton playAgain = new JButton(goDifficultySelect);
+		playAgain.setText("Play Again");
+		loseScreen.add(playAgain, gc);
+		
+		JButton menuButton = new JButton(goMenu);
+		gc.gridy = 4;
+		gc.ipadx = 76;
+		loseScreen.add(menuButton, gc);
+		
 	}
 	
 	private void initHowPlayScreen(){
@@ -325,7 +382,7 @@ public class MazeFrame extends JFrame{
 				layout.show(mainPanel, "game");
 				menuScreen.requestFocusInWindow();
 				gameScreen.getComponent(1).requestFocus();
-				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()));
+				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight() + 20));
 				//frame.setSize(new Dimension(463,390));
 				frame.pack();
 			}
@@ -347,7 +404,7 @@ public class MazeFrame extends JFrame{
 				layout.show(mainPanel, "game");
 				menuScreen.requestFocusInWindow();
 				gameScreen.getComponent(1).requestFocus();
-				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()));
+				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight() + 20));
 				//frame.setSize(new Dimension(463,390));
 				frame.pack();
 			}
@@ -370,7 +427,7 @@ public class MazeFrame extends JFrame{
 				layout.show(mainPanel, "game");
 				menuScreen.requestFocusInWindow();
 				gameScreen.getComponent(1).requestFocus();
-				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()));
+				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()+ 20));
 				frame.pack();
 			}
 		};
@@ -390,6 +447,8 @@ public class MazeFrame extends JFrame{
 				timeLabel.setText(timeCount + " sec");
 				scoreLabel.setText("Fuel: " + 0);
 				howToPlay.setVisible(false);
+				frame.setSize(463,390);
+				frame.setMinimumSize(new Dimension(463,390));
 				//frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()));
 				frame.pack();
 			}
@@ -507,8 +566,14 @@ public class MazeFrame extends JFrame{
 
 		@Override
 		public void fuelConsumed(EventObject e) {
-			board.repaint();
+			if(maze.getPlayer().getFuel() > 0){
+				board.repaint();
+			} else {
+				timer.stop();
+				showLose();
+			}
 		}
+		
 	}
 	
 	private JPanel mainPanel;
@@ -517,6 +582,7 @@ public class MazeFrame extends JFrame{
 	private JPanel difficultyScreen;
 	private JPanel howPlayScreen;
 	private JPanel winScreen;
+	private JPanel loseScreen;
 
 	private Action goDifficultySelect;
 	private Action goEasy;
@@ -527,6 +593,7 @@ public class MazeFrame extends JFrame{
 	private Action goHowPlay;
 	private Action exitGame;
 	private Action pauseScreen;
+	
 
 	private Board board;
 	private MazeImp maze;
@@ -538,6 +605,7 @@ public class MazeFrame extends JFrame{
 	private JLabel scoreLabel;
 	private Timer timer;
 	private long timeStart;
+	long currentTime;
 	
 	private JTextArea howToPlay;
 	private JLabel winTimeLabel;
