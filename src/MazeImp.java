@@ -85,7 +85,33 @@ public class MazeImp{
 		}
 		//addTreasure();
 	}
-
+	
+	public void addLoops(int percentage){
+		Random rn = new Random();
+		for(int i = 1; i < xSize-1; i++){
+			for(int j = 1; j < ySize-1; j++){
+				if(rn.nextInt(100) < percentage){
+					int side = rn.nextInt(4);
+					if(side == 0){
+						grid[i][j].setNorth(grid[i][j-1]);
+						grid[i][j-1].setSouth(grid[i][j]);
+					}
+					if(side == 1){
+						grid[i][j].setEast(grid[i+1][j]);
+						grid[i+1][j].setWest(grid[i][j]);
+					}
+					if(side == 2){
+						grid[i][j].setSouth(grid[i][j+1]);
+						grid[i][j+1].setNorth(grid[i][j]);
+					}
+					if(side == 3){
+						grid[i][j].setWest(grid[i-1][j]);
+						grid[i-1][j].setEast(grid[i][j]);
+					}
+				}
+			}
+		}
+	}
 	
 	public void markCell(int x, int y){
 		grid[x][y].setInMaze();

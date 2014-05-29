@@ -113,7 +113,7 @@ public class MazeFrame extends JFrame{
 		//timeLabel.setPreferredSize(new Dimension(50,20));
 //		timeLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
 //		timeLabel.setPreferredSize(new Dimension(50,20));
-		 ActionListener actionListener = new ActionListener() {
+		 ActionListener timerListener = new ActionListener() {
 		        public void actionPerformed(ActionEvent actionEvent) {
 		        	if (timeCount < 9999){
 		        		timeLabel.setText(timeCount + " sec");
@@ -126,7 +126,7 @@ public class MazeFrame extends JFrame{
 		        }
 		};
 		
-		timer = new Timer(1000, actionListener);
+		timer = new Timer(1000, timerListener);
 		    
 		    
 		JPanel gameMenu = new JPanel();
@@ -315,7 +315,7 @@ public class MazeFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				timer.start();
-				maze = new MazeImp(20,20);
+				maze = new MazeImp(25,25);
 				board = new Board(maze);
 				maze.addMazeListener(new boardListener());
 				gameScreen.add(board, BorderLayout.CENTER);
@@ -334,6 +334,7 @@ public class MazeFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				timer.start();
 				maze = new MazeImp(25,25);
+				maze.addLoops(10);
 				board = new Board(maze);
 				maze.addMazeListener(new boardListener());
 				gameScreen.add(board, BorderLayout.CENTER);

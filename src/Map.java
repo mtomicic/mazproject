@@ -26,6 +26,12 @@ public class Map {
 	private Image bottomRightPath;
 
 	private Image treasure;
+
+	private Image end;
+
+	private Image empty;
+
+	private Image wood;
 	
 	public Map() {
 		ImageIcon img = new ImageIcon("images/grass_10.jpg");
@@ -39,6 +45,7 @@ public class Map {
 		
 		img = new ImageIcon("images/sprites/tile0.jpg");
 		imageBank[0][0][0][0] = img.getImage(); 
+		empty = img.getImage();
 		img = new ImageIcon("images/sprites/tile1.jpg");
 		imageBank[0][0][0][1] = img.getImage();
 		img = new ImageIcon("images/sprites/tile2.jpg");
@@ -86,6 +93,11 @@ public class Map {
 		
 		img = new ImageIcon("images/treasure.png");
 		treasure = img.getImage();
+		img = new ImageIcon("images/end.png");
+		end = img.getImage();
+		
+		img = new ImageIcon("images/wood.png");
+		wood = img.getImage();
 	}
 	
 	
@@ -181,6 +193,26 @@ public class Map {
 	}
 
 
+	/**
+	 * @return the end image
+	 */
+	public Image getEndImg() {
+		return end;
+	}
+	
+	/**
+	 * @return empty tile
+	 */
+	public Image getEmptyImg() {
+		return empty;
+	}
+	
+	/**
+	 * @return empty tile
+	 */
+	public Image getWoodImg() {
+		return wood;
+	}
 
 	
 /*	
