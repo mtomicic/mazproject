@@ -29,6 +29,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.text.DefaultCaret;
 
 public class MazeFrame extends JFrame{
@@ -520,6 +521,7 @@ public class MazeFrame extends JFrame{
             	pauseFrame = new JFrame("Pause Menu");
                 pauseFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 pauseFrame.setMinimumSize(new Dimension(363,290));
+                pauseFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 //                try {
 //                   UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 //                } catch (Exception e) {
