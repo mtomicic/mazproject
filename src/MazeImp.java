@@ -244,12 +244,17 @@ public class MazeImp{
 		start = grid[x][y];
 	}
 	
-	public void randomEnd(){
+	public void randomEnd(Heuristic h){
 		Random rn = new Random();
 		int x = rn.nextInt(xSize);
 		int y = rn.nextInt(ySize);
-		
-		end = grid[x][y];
+		boolean done = false;
+		while(!done){
+			end = grid[x][y];
+			if(h.getH(start, end) > (xSize + ySize)/2){
+				done = true;
+			}
+		}
 	}
 	
 

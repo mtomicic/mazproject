@@ -352,7 +352,7 @@ public class MazeFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				timer.start();
 				maze = new MazeImp(25,25);
-				maze.randomEnd();
+				maze.randomEnd(new ManhattenHeuristic());
 				maze.setPlayer(new Player(0,0,4));
 				//maze.addLoops(10);
 				board = new Board(maze);
