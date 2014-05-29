@@ -75,7 +75,7 @@ public class MazeFrame extends JFrame{
 		timer.restart();
 		timer.stop();
 		winTimeLabel.setText("Your time was " + timeCount + " seconds");
-		winScoreLabel.setText("Your score was " + maze.getPlayer().getMoney());
+	//	winScoreLabel.setText("Your score was " + maze.getPlayer().getFuel());
 		timeCount = 0;
 		timeLabel.setText(timeCount + " sec");
 		howToPlay.setVisible(false);
@@ -98,7 +98,7 @@ public class MazeFrame extends JFrame{
 		gameScreen.setLayout(new BorderLayout());
 		JButton retMainMenu = new JButton(goMenu);
 		JButton helpButton = new JButton(drawPath);
-		scoreLabel = new JLabel("Score: " + 0);
+		scoreLabel = new JLabel("Fuel: " + 0);
 		//retMainMenu.setSize(20, 20);
 		//helpButton.setSize(20, 20);
 		
@@ -118,6 +118,10 @@ public class MazeFrame extends JFrame{
 		        	if (timeCount < 9999){
 		        		timeLabel.setText(timeCount + " sec");
 			        	timeCount++;
+			        	maze.consumeFuel();
+			        	System.out.print(maze.getPlayer().getFuel());
+			        	scoreLabel.setText("Fuel: " + maze.getPlayer().getFuel());
+		
 		        	} else {
 		        		timeLabel.setText("way too long");
 		        		timeLabel.setFont(new Font(timeLabel.getFont().getName(), Font.BOLD, 15));	
@@ -287,7 +291,7 @@ public class MazeFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				layout.show(mainPanel, "diff");
-				scoreLabel.setText("Score: " + 0);
+				scoreLabel.setText("Fuel: " + 0);
 				difficultyScreen.requestFocusInWindow();
 			}
 		};
@@ -360,7 +364,7 @@ public class MazeFrame extends JFrame{
 				timer.restart();
 				timer.stop();
 				timeLabel.setText(timeCount + " sec");
-				scoreLabel.setText("Score: " + 0);
+				scoreLabel.setText("Fuel: " + 0);
 				howToPlay.setVisible(false);
 				frame.setMinimumSize(new Dimension(463,390));
 				frame.pack();
@@ -417,7 +421,12 @@ public class MazeFrame extends JFrame{
 		public void treasureCollected(EventObject e) {
 			// TODO Auto-generated method stub
 			//removeTime(2);
-			scoreLabel.setText("Score: " + maze.getPlayer().getMoney());
+			scoreLabel.setText("Fuel: " + maze.getPlayer().getFuel());
+		}
+
+		@Override
+		public void fuelConsumed(EventObject e) {
+			board.repaint();
 		}
 	}
 	

@@ -6,6 +6,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagLayout;
 import java.awt.event.*;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.EventObject;
 
@@ -66,7 +70,21 @@ public class Board extends JPanel implements ActionListener{
 		 				t.getX() *tileSize + (tileSize-treasureSize)/2, 
 		 				t.getY() * tileSize + (tileSize-treasureSize)/2, null);
 		}
+		Player player = mazeModel.getPlayer();
+		int topLeftX = player.getX()*tileSize - player.getFuel()/2 + (tileSize - playerSize)/2 + playerSize/2;
+		int topLeftY = player.getY()*tileSize - player.getFuel()/2 + (tileSize - playerSize)/2 + playerSize/2; 
+		
+		BufferedImage image = new BufferedImage(mapWidth*tileSize, mapHeight*tileSize, BufferedImage.TYPE_INT_ARGB);
+
+		Area mask = new Area(new Rectangle2D.Double(0, 0, mapWidth*tileSize, mapHeight*tileSize));
+		Area hole = new Area(new Ellipse2D.Double(topLeftX, topLeftY, player.getFuel(), player.getFuel()));
+		mask.subtract(hole);
+		
+		g2d.setColor(Color.black);
+		g2d.fill(mask);
+		g2d.drawImage(image, 0, 0, this);
 	}
+	
 	
 	public void easyDraw(Graphics g){
 		Graphics2D g2d = (Graphics2D) g;
@@ -93,6 +111,10 @@ public class Board extends JPanel implements ActionListener{
 			}
 		}
 	}
+	
+
+	
+	
 	
 	public class Al extends KeyAdapter {
 		

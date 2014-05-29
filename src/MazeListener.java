@@ -12,4 +12,6 @@ public interface MazeListener extends EventListener {
 	public void playerFinished(EventObject e);
 	
 	public void treasureCollected(EventObject e);
+	
+	public void fuelConsumed(EventObject e);
 }

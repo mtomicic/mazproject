@@ -29,6 +29,7 @@ public class MazeImp{
 		mazeListeners = new EventListenerList();
 		start = grid[0][0];
 		player = new Player(0,0);
+		System.out.print("yolo" + player.getFuel());
 		Random rn = new Random();
 		int i = rn.nextInt(xSize);
 		int j = rn.nextInt(ySize);
@@ -328,7 +329,7 @@ public class MazeImp{
 			for(Treasure t:treasure){
 				if(player.getX() == t.getX() && player.getY() == t.getY()){
 					treasure.remove(t);
-					player.giveMoney(t.getValue());
+					player.giveFuel(t.getValue());
 					fireTreasureCollected();
 					break;
 				}
@@ -386,6 +387,14 @@ public class MazeImp{
 		}
 	}
 	
+	public void fireFuelConsumed(){
+		MazeListener[] listeners = mazeListeners.getListeners(MazeListener.class);
+		EventObject e = new EventObject(this);
+		for(MazeListener listener:listeners){
+			listener.fuelConsumed(e);
+		}
+	}
+	
 	public int[] getWallType(int xPos, int yPos){  
 		return grid[xPos][yPos].getWalls();
 	}
@@ -412,6 +421,11 @@ public class MazeImp{
 	public Player getPlayer() {
 		// TODO Auto-generated method stub
 		return player;
+	}
+	
+	public void consumeFuel(){
+		player.fuelDecrement();
+		fireFuelConsumed();
 	}
 	
 	public ArrayList<Treasure> getTreasure() {
