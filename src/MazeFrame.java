@@ -56,7 +56,8 @@ public class MazeFrame extends JFrame{
 		initHowPlayScreen();
 		initWinScreen();
 		initLoseScreen();
-		createPuaseFrame();
+//		createPuaseFrame();
+		initPauseScreen();
 		initCardLayout();
 		
 		this.setSize(463,390);
@@ -118,6 +119,7 @@ public class MazeFrame extends JFrame{
 		mainPanel.add(howPlayScreen, "howPlay");
 		mainPanel.add(winScreen, "win");
 		mainPanel.add(loseScreen, "lose");
+		mainPanel.add(pauseScreen, "pause");
 	}
 	
 	private void initGameScreen(){
@@ -188,7 +190,7 @@ public class MazeFrame extends JFrame{
 		gameMenu.add(timeLabel,gc);
 		gameScreen.add(gameMenu, BorderLayout.LINE_END);
 		
-		JButton pauseButton = new JButton(pauseScreen);
+		JButton pauseButton = new JButton(showPause);
 		gc.gridy = 4;
 		gc.weighty = 300;
 		gameMenu.add(pauseButton, gc);
@@ -361,6 +363,45 @@ public class MazeFrame extends JFrame{
 		howPlayScreen.add(retMainMenu, gc);
 	}
 
+	
+	private void initPauseScreen(){
+		pauseScreen = new JPanel();
+		pauseScreen.setLayout(new GridBagLayout());
+		GridBagConstraints gc =  new GridBagConstraints();
+		gc.anchor = GridBagConstraints.CENTER;
+		pauseScreen.setBackground(Color.GRAY);
+		pauseTimeLabel = new JLabel("Your time so far is " + currentTime + " seconds", SwingConstants.CENTER);
+		pauseTimeLabel.setForeground(Color.YELLOW);
+		//winScoreLabel = new JLabel("Your score was " + 0, SwingConstants.CENTER);
+		//winScoreLabel .setForeground(Color.YELLOW);
+		timeCount = 0;
+		gc.ipadx = 78;
+		gc.ipady = 20;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.gridy = 0;
+		JLabel pauseLabel = new JLabel("Paused", SwingConstants.CENTER);
+		pauseLabel.setForeground(Color.YELLOW);
+		pauseLabel.setFont(new Font(pauseLabel.getFont().getName(), Font.BOLD, 30));
+		pauseScreen.add(pauseLabel, gc);
+//		gc.weighty = 1;
+		gc.gridy = 1;
+		gc.ipady = 0;
+		pauseScreen.add(pauseTimeLabel, gc);
+		gc.gridy = 2;
+		gc.ipady = 20;
+		//winScreen.add(winScoreLabel, gc);
+		gc.gridy = 3;
+		gc.ipady = 20;
+		JButton resume = new JButton(resumeGame);
+		gc.ipadx = 90;
+		pauseScreen.add(resume, gc);
+		
+		JButton menuButton = new JButton(goMenu);
+		gc.gridy = 4;
+		gc.ipadx = 76;
+		pauseScreen.add(menuButton, gc);
+	}
+	
 	private void initActions() {
 		goDifficultySelect = new AbstractAction("Play"){
 			@Override
@@ -490,12 +531,16 @@ public class MazeFrame extends JFrame{
 			}
 		};
 		
-		pauseScreen = new AbstractAction("Pause") {
+		showPause = new AbstractAction("Pause") {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				pauseFrame.setVisible(true);
+				frame.setMinimumSize(new Dimension(463,390));
+				layout.show(mainPanel, "pause");
+				pauseTimeLabel.setText("Your time so far is " + currentTime + " seconds");
+				pauseScreen.requestFocus();
                 timer.stop();
-                frame.setVisible(false);
+                frame.pack();
+//                frame.setVisible(false);
 			}
 		};
 		
@@ -503,62 +548,64 @@ public class MazeFrame extends JFrame{
 		resumeGame = new AbstractAction("Resume"){
 			@Override
 			public void actionPerformed(ActionEvent e){
+				layout.show(mainPanel, "game");
 				timer.start();
-				pauseFrame.setVisible(false);
 				menuScreen.requestFocusInWindow();
 				gameScreen.getComponent(1).requestFocus();
-				frame.setVisible(true);
+				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()+ 20));
+				frame.pack();
+//				frame.setVisible(true);
 			}
 		};
 	}
 	
 	
 	
-	public static void createPuaseFrame() {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-            	pauseFrame = new JFrame("Pause Menu");
-                pauseFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                pauseFrame.setMinimumSize(new Dimension(363,290));
-                pauseFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-//                try {
-//                   UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//                } catch (Exception e) {
-//                   e.printStackTrace();
-//                }
-                JPanel panel = new JPanel();
-                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-                panel.setOpaque(true);
-                JTextArea textArea = new JTextArea(15, 30);
-                textArea.setWrapStyleWord(true);
-                textArea.setEditable(false);
-                textArea.setFont(Font.getFont(Font.SANS_SERIF));
-                JScrollPane scroller = new JScrollPane(textArea);
-                scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-                scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-                JPanel inputpanel = new JPanel();
-                inputpanel.setLayout(new FlowLayout());
-                JTextField input = new JTextField(20);
-                JButton button = new JButton("Enter");
-                DefaultCaret caret = (DefaultCaret) textArea.getCaret();
-                caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-                panel.add(scroller);
-                JButton resumeButton = new JButton(resumeGame);
-                inputpanel.add(input);
-                inputpanel.add(button);
-                inputpanel.add(resumeButton);
-                panel.add(inputpanel);
-                pauseFrame.getContentPane().add(BorderLayout.CENTER, panel);
-                pauseFrame.pack();
-                pauseFrame.setLocationByPlatform(true);
-                pauseFrame.setVisible(false);
-                pauseFrame.setResizable(false);
-                input.requestFocus();
-                pauseFrame.setLocationRelativeTo(null);
-            }
-        });
-    }
+//	public static void createPuaseFrame() {
+//        EventQueue.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//            	pauseFrame = new JFrame("Pause Menu");
+//                pauseFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//                pauseFrame.setMinimumSize(new Dimension(363,290));
+//                pauseFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+////                try {
+////                   UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+////                } catch (Exception e) {
+////                   e.printStackTrace();
+////                }
+//                JPanel panel = new JPanel();
+//                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+//                panel.setOpaque(true);
+//                JTextArea textArea = new JTextArea(15, 30);
+//                textArea.setWrapStyleWord(true);
+//                textArea.setEditable(false);
+//                textArea.setFont(Font.getFont(Font.SANS_SERIF));
+//                JScrollPane scroller = new JScrollPane(textArea);
+//                scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+//                scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+//                JPanel inputpanel = new JPanel();
+//                inputpanel.setLayout(new FlowLayout());
+//                JTextField input = new JTextField(20);
+//                JButton button = new JButton("Enter");
+//                DefaultCaret caret = (DefaultCaret) textArea.getCaret();
+//                caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+//                panel.add(scroller);
+//                JButton resumeButton = new JButton(resumeGame);
+//                inputpanel.add(input);
+//                inputpanel.add(button);
+//                inputpanel.add(resumeButton);
+//                panel.add(inputpanel);
+//                pauseFrame.getContentPane().add(BorderLayout.CENTER, panel);
+//                pauseFrame.pack();
+//                pauseFrame.setLocationByPlatform(true);
+//                pauseFrame.setVisible(false);
+//                pauseFrame.setResizable(false);
+//                input.requestFocus();
+//                pauseFrame.setLocationRelativeTo(null);
+//            }
+//        });
+//    }
 	
 	
 	public class boardListener implements MazeListener{
@@ -606,6 +653,7 @@ public class MazeFrame extends JFrame{
 	private JPanel howPlayScreen;
 	private JPanel winScreen;
 	private JPanel loseScreen;
+	private JPanel pauseScreen;
 
 	private Action goDifficultySelect;
 	private Action goEasy;
@@ -615,7 +663,7 @@ public class MazeFrame extends JFrame{
 	private Action drawPath;
 	private Action goHowPlay;
 	private Action exitGame;
-	private Action pauseScreen;
+	private Action showPause;
 	private static Action resumeGame;
 
 	private Board board;
@@ -634,6 +682,7 @@ public class MazeFrame extends JFrame{
 	private JLabel winTimeLabel;
 	private JLabel winScoreLabel;
 	
-	private static JFrame pauseFrame; 
+//	private static JFrame pauseFrame; 
+	private JLabel pauseTimeLabel;
 	
 }
