@@ -4,11 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.EventObject;
@@ -19,12 +19,16 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.UIManager;
+import javax.swing.text.DefaultCaret;
 
 public class MazeFrame extends JFrame{
 	public static void main(String[] args) {
@@ -75,7 +79,7 @@ public class MazeFrame extends JFrame{
 		timer.restart();
 		timer.stop();
 		winTimeLabel.setText("Your time was " + timeCount + " seconds");
-		winScoreLabel.setText("Your score was " + maze.getPlayer().getMoney());
+	//	winScoreLabel.setText("Your score was " + maze.getPlayer().getFuel());
 		timeCount = 0;
 		timeLabel.setText(timeCount + " sec");
 		howToPlay.setVisible(false);
@@ -98,7 +102,7 @@ public class MazeFrame extends JFrame{
 		gameScreen.setLayout(new BorderLayout());
 		JButton retMainMenu = new JButton(goMenu);
 		JButton helpButton = new JButton(drawPath);
-		scoreLabel = new JLabel("Score: " + 0);
+		scoreLabel = new JLabel("Fuel: " + 0);
 		//retMainMenu.setSize(20, 20);
 		//helpButton.setSize(20, 20);
 		
@@ -113,11 +117,15 @@ public class MazeFrame extends JFrame{
 		//timeLabel.setPreferredSize(new Dimension(50,20));
 //		timeLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
 //		timeLabel.setPreferredSize(new Dimension(50,20));
-		 ActionListener actionListener = new ActionListener() {
+		 ActionListener timerListener = new ActionListener() {
 		        public void actionPerformed(ActionEvent actionEvent) {
 		        	if (timeCount < 9999){
 		        		timeLabel.setText(timeCount + " sec");
 			        	timeCount++;
+			        	maze.consumeFuel();
+			        	System.out.print(maze.getPlayer().getFuel());
+			        	scoreLabel.setText("Fuel: " + maze.getPlayer().getFuel());
+		
 		        	} else {
 		        		timeLabel.setText("way too long");
 		        		timeLabel.setFont(new Font(timeLabel.getFont().getName(), Font.BOLD, 15));	
@@ -126,7 +134,7 @@ public class MazeFrame extends JFrame{
 		        }
 		};
 		
-		timer = new Timer(1000, actionListener);
+		timer = new Timer(100, timerListener);
 		    
 		    
 		JPanel gameMenu = new JPanel();
@@ -156,6 +164,11 @@ public class MazeFrame extends JFrame{
 		gc.weighty = 200;
 		gameMenu.add(timeLabel,gc);
 		gameScreen.add(gameMenu, BorderLayout.LINE_END);
+		
+		JButton pauseButton = new JButton(pauseScreen);
+		gc.gridy = 4;
+		gc.weighty = 300;
+		gameMenu.add(pauseButton, gc);
 	}
 	
 	private void initDifficultyScreen(){
@@ -217,6 +230,10 @@ public class MazeFrame extends JFrame{
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		menuScreen.add(howPlay, gc);
 		
+		JButton exitButton = new JButton(exitGame);
+		gc.gridy = 2;
+		gc.ipadx = 0;
+		menuScreen.add(exitButton, gc);
 	}
 	
 	private void initWinScreen(){
@@ -287,7 +304,7 @@ public class MazeFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				layout.show(mainPanel, "diff");
-				scoreLabel.setText("Score: " + 0);
+				scoreLabel.setText("Fuel: " + 0);
 				difficultyScreen.requestFocusInWindow();
 			}
 		};
@@ -305,8 +322,8 @@ public class MazeFrame extends JFrame{
 				layout.show(mainPanel, "game");
 				menuScreen.requestFocusInWindow();
 				gameScreen.getComponent(1).requestFocus();
-				frame.setMinimumSize(new Dimension(463,390));
-				frame.setSize(new Dimension(463,390));
+				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()));
+				//frame.setSize(new Dimension(463,390));
 				frame.pack();
 			}
 		};
@@ -315,16 +332,17 @@ public class MazeFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				timer.start();
-				maze = new MazeImp(20,20);
+				maze = new MazeImp(25,25);
 				board = new Board(maze);
+				//board.activateSurvival();
 				maze.addMazeListener(new boardListener());
 				gameScreen.add(board, BorderLayout.CENTER);
 				gameScreen.setBackground(Color.GRAY);
 				layout.show(mainPanel, "game");
 				menuScreen.requestFocusInWindow();
 				gameScreen.getComponent(1).requestFocus();
-				frame.setMinimumSize(new Dimension(463,390));
-				frame.setSize(new Dimension(463,390));
+				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()));
+				//frame.setSize(new Dimension(463,390));
 				frame.pack();
 			}
 		};
@@ -334,14 +352,18 @@ public class MazeFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				timer.start();
 				maze = new MazeImp(25,25);
+				maze.randomEnd();
+				maze.setPlayer(new Player(0,0,4));
+				//maze.addLoops(10);
 				board = new Board(maze);
+				board.activateSurvival();
 				maze.addMazeListener(new boardListener());
 				gameScreen.add(board, BorderLayout.CENTER);
 				gameScreen.setBackground(Color.GRAY);
 				layout.show(mainPanel, "game");
 				menuScreen.requestFocusInWindow();
 				gameScreen.getComponent(1).requestFocus();
-				frame.setMinimumSize(new Dimension(463,390));
+				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()));
 				frame.pack();
 			}
 		};
@@ -359,9 +381,9 @@ public class MazeFrame extends JFrame{
 				timer.restart();
 				timer.stop();
 				timeLabel.setText(timeCount + " sec");
-				scoreLabel.setText("Score: " + 0);
+				scoreLabel.setText("Fuel: " + 0);
 				howToPlay.setVisible(false);
-				frame.setMinimumSize(new Dimension(463,390));
+				//frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()));
 				frame.pack();
 			}
 		};
@@ -390,7 +412,64 @@ public class MazeFrame extends JFrame{
 				frame.pack();
 			}
 		};
+		
+		exitGame = new AbstractAction("Exit") {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		};
+		
+		pauseScreen = new AbstractAction("Pause") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				createFrame();
+			}
+		};
 	}
+	
+	public static void createFrame() {
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JFrame frame = new JFrame("Pause Menu");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                try {
+                   UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } catch (Exception e) {
+                   e.printStackTrace();
+                }
+                JPanel panel = new JPanel();
+                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+                panel.setOpaque(true);
+                JTextArea textArea = new JTextArea(15, 50);
+                textArea.setWrapStyleWord(true);
+                textArea.setEditable(false);
+                textArea.setFont(Font.getFont(Font.SANS_SERIF));
+                JScrollPane scroller = new JScrollPane(textArea);
+                scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+                scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                JPanel inputpanel = new JPanel();
+                inputpanel.setLayout(new FlowLayout());
+                JTextField input = new JTextField(20);
+                JButton button = new JButton("Enter");
+                DefaultCaret caret = (DefaultCaret) textArea.getCaret();
+                caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+                panel.add(scroller);
+                inputpanel.add(input);
+                inputpanel.add(button);
+                panel.add(inputpanel);
+                frame.getContentPane().add(BorderLayout.CENTER, panel);
+                frame.pack();
+                frame.setLocationByPlatform(true);
+                frame.setVisible(true);
+                frame.setResizable(false);
+                input.requestFocus();
+                frame.setLocationRelativeTo(null);
+            }
+        });
+    }
 	
 	
 	public class boardListener implements MazeListener{
@@ -416,7 +495,12 @@ public class MazeFrame extends JFrame{
 		public void treasureCollected(EventObject e) {
 			// TODO Auto-generated method stub
 			//removeTime(2);
-			scoreLabel.setText("Score: " + maze.getPlayer().getMoney());
+			scoreLabel.setText("Fuel: " + maze.getPlayer().getFuel());
+		}
+
+		@Override
+		public void fuelConsumed(EventObject e) {
+			board.repaint();
 		}
 	}
 	
@@ -434,6 +518,8 @@ public class MazeFrame extends JFrame{
 	private Action goMenu;
 	private Action drawPath;
 	private Action goHowPlay;
+	private Action exitGame;
+	private Action pauseScreen;
 
 	private Board board;
 	private MazeImp maze;
