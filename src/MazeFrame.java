@@ -181,19 +181,21 @@ public class MazeFrame extends JFrame{
 		gc.weightx = 0;
 		gc.weighty = 1;
 		gameMenu.add(helpButton, gc);
+		
+		JButton pauseButton = new JButton(showPause);
 		gc.gridy = 2;
+		gc.weighty = 2;
+		gc.ipady = 20;
+		gameMenu.add(pauseButton, gc);
+		
+		gc.gridy = 3;
 		gc.weighty = 100;
 		gc.ipady = 0;
 		gameMenu.add(scoreLabel, gc);
-		gc.gridy = 3;
+		gc.gridy = 4;
 		gc.weighty = 200;
 		gameMenu.add(timeLabel,gc);
 		gameScreen.add(gameMenu, BorderLayout.LINE_END);
-		
-		JButton pauseButton = new JButton(showPause);
-		gc.gridy = 4;
-		gc.weighty = 300;
-		gameMenu.add(pauseButton, gc);
 	}
 	
 	private void initDifficultyScreen(){
