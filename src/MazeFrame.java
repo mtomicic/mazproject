@@ -11,6 +11,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
 import java.util.EventObject;
 
 import javax.swing.AbstractAction;
@@ -54,6 +55,7 @@ public class MazeFrame extends JFrame{
 		initHowPlayScreen();
 		initWinScreen();
 		initLoseScreen();
+		createPuaseFrame();
 		initCardLayout();
 		
 		this.setSize(463,390);
@@ -459,8 +461,8 @@ public class MazeFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				//board.drawPath();
 				gameScreen.getComponent(1).requestFocus();
-				timeCount +=20;
-				timeLabel.setText(timeCount + " sec");
+//				timeCount +=20;
+//				timeLabel.setText(timeCount + " sec");
 				frame.pack();
 			}
 			
@@ -490,26 +492,43 @@ public class MazeFrame extends JFrame{
 		pauseScreen = new AbstractAction("Pause") {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				createFrame();
+				pauseFrame.setVisible(true);
+                timer.stop();
+                frame.setVisible(false);
+			}
+		};
+		
+		
+		resumeGame = new AbstractAction("Resume"){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				timer.start();
+				pauseFrame.setVisible(false);
+				menuScreen.requestFocusInWindow();
+				gameScreen.getComponent(1).requestFocus();
+				frame.setVisible(true);
 			}
 		};
 	}
 	
-	public static void createFrame() {
+	
+	
+	public static void createPuaseFrame() {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                JFrame frame = new JFrame("Pause Menu");
-                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                try {
-                   UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } catch (Exception e) {
-                   e.printStackTrace();
-                }
+            	pauseFrame = new JFrame("Pause Menu");
+                pauseFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                pauseFrame.setMinimumSize(new Dimension(363,290));
+//                try {
+//                   UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//                } catch (Exception e) {
+//                   e.printStackTrace();
+//                }
                 JPanel panel = new JPanel();
                 panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
                 panel.setOpaque(true);
-                JTextArea textArea = new JTextArea(15, 50);
+                JTextArea textArea = new JTextArea(15, 30);
                 textArea.setWrapStyleWord(true);
                 textArea.setEditable(false);
                 textArea.setFont(Font.getFont(Font.SANS_SERIF));
@@ -523,16 +542,18 @@ public class MazeFrame extends JFrame{
                 DefaultCaret caret = (DefaultCaret) textArea.getCaret();
                 caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
                 panel.add(scroller);
+                JButton resumeButton = new JButton(resumeGame);
                 inputpanel.add(input);
                 inputpanel.add(button);
+                inputpanel.add(resumeButton);
                 panel.add(inputpanel);
-                frame.getContentPane().add(BorderLayout.CENTER, panel);
-                frame.pack();
-                frame.setLocationByPlatform(true);
-                frame.setVisible(true);
-                frame.setResizable(false);
+                pauseFrame.getContentPane().add(BorderLayout.CENTER, panel);
+                pauseFrame.pack();
+                pauseFrame.setLocationByPlatform(true);
+                pauseFrame.setVisible(false);
+                pauseFrame.setResizable(false);
                 input.requestFocus();
-                frame.setLocationRelativeTo(null);
+                pauseFrame.setLocationRelativeTo(null);
             }
         });
     }
@@ -593,7 +614,7 @@ public class MazeFrame extends JFrame{
 	private Action goHowPlay;
 	private Action exitGame;
 	private Action pauseScreen;
-	
+	private static Action resumeGame;
 
 	private Board board;
 	private MazeImp maze;
@@ -603,11 +624,14 @@ public class MazeFrame extends JFrame{
 	private int timeCount = 0;
 	private final JLabel timeLabel = new JLabel(timeCount + " sec", SwingConstants.RIGHT);
 	private JLabel scoreLabel;
-	private Timer timer;
+	private static Timer timer;
 	private long timeStart;
 	long currentTime;
 	
 	private JTextArea howToPlay;
 	private JLabel winTimeLabel;
 	private JLabel winScoreLabel;
+	
+	private static JFrame pauseFrame; 
+	
 }
