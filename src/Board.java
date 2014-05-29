@@ -58,8 +58,8 @@ public class Board extends JPanel implements ActionListener{
 		drawMaze(g);
 		
 		g.drawImage(map.getEndImg(),
-					(mazeModel.getEnd().getxPos() - 1)*tileSize + (tileSize - 12)/2,
-					(mazeModel.getEnd().getyPos() - 1)*tileSize + (tileSize - 12)/2, null);
+					(mazeModel.getEnd().getxPos()*tileSize + (tileSize - 12)/2),
+					(mazeModel.getEnd().getyPos()*tileSize + (tileSize - 12)/2), null);
 		
 
 		g.drawImage(mazeModel.getPlayer().getPlayer(), 

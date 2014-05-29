@@ -35,7 +35,7 @@ public class MazeImp{
 		int i = rn.nextInt(xSize);
 		int j = rn.nextInt(ySize);
 		end = grid[xSize-1][ySize-1];
-		fuel = new ArrayList<Fuel>();
+		fuels = new ArrayList<Fuel>();
 		addFuel(100);
 	}
 	
@@ -328,7 +328,7 @@ public class MazeImp{
 			for(int j = 0; j < ySize; j++){
 				if(grid[i][j].isDeadEnd()){
 					if(rn.nextInt(100) >= 75){
-						fuel.add(new Fuel(i,j, value));
+						fuels.add(new Fuel(i,j, value));
 					}
 				}
 			}
@@ -343,9 +343,9 @@ public class MazeImp{
 			if(grid[player.getX()][player.getY()].equals(end)){
 				firePlayerFinished();
 			}
-			for(Fuel t:fuel){
+			for(Fuel t:fuels){
 				if(player.getX() == t.getX() && player.getY() == t.getY()){
-					fuel.remove(t);
+					fuels.remove(t);
 					player.giveFuel(t.getValue());
 					fireTreasureCollected();
 					break;
@@ -450,7 +450,7 @@ public class MazeImp{
 	}
 	
 	public ArrayList<Fuel> getFuel() {
-		return (ArrayList<Fuel>) fuel.clone();
+		return (ArrayList<Fuel>) fuels.clone();
 	}
 
 	Node start;
@@ -463,7 +463,7 @@ public class MazeImp{
 	private Player player;
 	
 
-	private ArrayList<Fuel> fuel;
+	private ArrayList<Fuel> fuels;
 
 
 	public Node getEnd() {
