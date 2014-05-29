@@ -32,6 +32,8 @@ public class Map {
 	private Image empty;
 
 	private Image wood;
+
+	private Image fuel;
 	
 	public Map() {
 		ImageIcon img = new ImageIcon("images/grass_10.jpg");
@@ -96,8 +98,10 @@ public class Map {
 		img = new ImageIcon("images/end.png");
 		end = img.getImage();
 		
-		img = new ImageIcon("images/wood.png");
+		img = new ImageIcon("images/wood_25.png");
 		wood = img.getImage();
+		img = new ImageIcon("images/potion_custom.png");
+		fuel = img.getImage();
 	}
 	
 	
@@ -120,8 +124,8 @@ public class Map {
 		return pathhint;
 	}
 	
-	public Image getTreasureImg() {
-		return treasure;
+	public Image getFuelImg() {
+		return fuel;
 	}
 
 	/**

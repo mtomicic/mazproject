@@ -24,6 +24,14 @@ public class Player extends MazeObject{
 		fuelRate = 5;
 	}
 	
+	public Player(int x, int y, int fr) {
+		super(x,y);
+		ImageIcon img = new ImageIcon("images/bert2_10.jpg");
+		player = img.getImage();
+		fuel = 100;
+		fuelRate = fr;
+	}
+	
 	public Image getPlayer() {
 		return player;
 	}

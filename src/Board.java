@@ -23,7 +23,8 @@ public class Board extends JPanel implements ActionListener{
 	private MazeImp mazeModel;
 	private int mapWidth;
 	private int mapHeight;
-	private static int tileSize = 16;
+	private boolean survivalOn;
+	private static int tileSize = 25;
 	private static int playerSize = 10;
 	private static int treasureSize = 4;
 	
@@ -41,6 +42,7 @@ public class Board extends JPanel implements ActionListener{
 		
 		timer = new Timer(25, this);
 		timer.start();
+		survivalOn = false;
 	}
 	
 	@Override
@@ -51,42 +53,32 @@ public class Board extends JPanel implements ActionListener{
 	public void paint(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		super.paint(g);
-		g2d.setStroke(new BasicStroke(2));
+		g2d.setStroke(new BasicStroke(4));
 		
-		easyDraw(g);
+		drawMaze(g);
 		
 		g.drawImage(map.getEndImg(),
-					(mapWidth-1)*tileSize + (tileSize - 12)/2,
-					(mapHeight-1)*tileSize + (tileSize - 12)/2, null);
+					(mazeModel.getEnd().getxPos() - 1)*tileSize + (tileSize - 12)/2,
+					(mazeModel.getEnd().getyPos() - 1)*tileSize + (tileSize - 12)/2, null);
 		
 
 		g.drawImage(mazeModel.getPlayer().getPlayer(), 
 					mazeModel.getPlayer().getX() * tileSize + (tileSize - playerSize)/2,
 					mazeModel.getPlayer().getY() * tileSize + (tileSize - playerSize)/2, null);
 		
-		ArrayList<Treasure> treasures= mazeModel.getTreasure();
-		for(Treasure t: treasures){
-		 	g.drawImage(map.getTreasureImg(),
-		 				t.getX() *tileSize + (tileSize-treasureSize)/2, 
-		 				t.getY() * tileSize + (tileSize-treasureSize)/2, null);
+		ArrayList<Fuel> fuels= mazeModel.getFuel();
+		for(Fuel t: fuels){
+		 	g.drawImage(map.getFuelImg(),
+		 				t.getX() *tileSize , 
+		 				t.getY() * tileSize , null);
 		}
-		Player player = mazeModel.getPlayer();
-		int topLeftX = player.getX()*tileSize - player.getFuel()/2 + (tileSize - playerSize)/2 + playerSize/2;
-		int topLeftY = player.getY()*tileSize - player.getFuel()/2 + (tileSize - playerSize)/2 + playerSize/2; 
-		
-		BufferedImage image = new BufferedImage(mapWidth*tileSize, mapHeight*tileSize, BufferedImage.TYPE_INT_ARGB);
-
-		Area mask = new Area(new Rectangle2D.Double(0, 0, mapWidth*tileSize, mapHeight*tileSize));
-		Area hole = new Area(new Ellipse2D.Double(topLeftX, topLeftY, player.getFuel(), player.getFuel()));
-		mask.subtract(hole);
-		
-		g2d.setColor(Color.black);
-		g2d.fill(mask);
-		g2d.drawImage(image, 0, 0, this);
+		if(survivalOn){
+			drawMask(g2d);
+		}
 	}
 	
 	
-	public void easyDraw(Graphics g){
+	public void drawMaze(Graphics g){
 		Graphics2D g2d = (Graphics2D) g;
 		for (int y = 0; y < mapHeight; y++) {
 			for (int x = 0; x < mapWidth; x++) {
@@ -112,7 +104,22 @@ public class Board extends JPanel implements ActionListener{
 		}
 	}
 	
-
+	public void drawMask(Graphics g){
+		Graphics2D g2d  = (Graphics2D) g;
+		BufferedImage image = new BufferedImage(mapWidth*tileSize, mapHeight*tileSize, BufferedImage.TYPE_INT_ARGB);
+		
+		Player player = mazeModel.getPlayer();
+		int topLeftX = player.getX()*tileSize - player.getFuel()/2 + (tileSize - playerSize)/2 + playerSize/2;
+		int topLeftY = player.getY()*tileSize - player.getFuel()/2 + (tileSize - playerSize)/2 + playerSize/2; 
+		
+		Area mask = new Area(new Rectangle2D.Double(0, 0, mapWidth*tileSize, mapHeight*tileSize));
+		Area hole = new Area(new Ellipse2D.Double(topLeftX, topLeftY, player.getFuel(), player.getFuel()));
+		mask.subtract(hole);
+		
+		g2d.setColor(Color.black);
+		g2d.fill(mask);
+		g2d.drawImage(image, 0, 0, this);
+	}
 	
 	
 	
@@ -142,7 +149,21 @@ public class Board extends JPanel implements ActionListener{
 		}
 		
 	}
+
+
+
+	public void activateSurvival() {
+		survivalOn = true;
+		
+	}
+
+	public int getPixelWidth() {
+		return (mapWidth+1)*tileSize;
+	}
 	
+	public int getPixelHeight() {
+		return (mapHeight+1)*tileSize;
+	}
 	
 	/*
 

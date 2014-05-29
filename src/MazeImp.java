@@ -1,3 +1,4 @@
+import java.awt.geom.RectangularShape;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EventObject;
@@ -34,8 +35,8 @@ public class MazeImp{
 		int i = rn.nextInt(xSize);
 		int j = rn.nextInt(ySize);
 		end = grid[xSize-1][ySize-1];
-		treasure = new ArrayList<Treasure>();
-		addTreasure();
+		fuel = new ArrayList<Fuel>();
+		addFuel(100);
 	}
 	
 	private void generate(){
@@ -235,6 +236,22 @@ public class MazeImp{
 	}
 	
 	
+	public void randomStart(){
+		Random rn = new Random();
+		int x = rn.nextInt(xSize);
+		int y = rn.nextInt(ySize);
+		
+		start = grid[x][y];
+	}
+	
+	public void randomEnd(){
+		Random rn = new Random();
+		int x = rn.nextInt(xSize);
+		int y = rn.nextInt(ySize);
+		
+		end = grid[x][y];
+	}
+	
 
 	public ArrayList<Node> getPath(Node start, Node goal, Heuristic h){
 		PriorityQueue<State> open = new PriorityQueue<State>(11, new Comparator<State>(){
@@ -304,14 +321,14 @@ public class MazeImp{
 		return path;
 	}
 	
-	private void addTreasure(){
+	private void addFuel(int value){
 		Random rn = new Random();
 		
 		for(int i = 0; i < xSize; i++){
 			for(int j = 0; j < ySize; j++){
 				if(grid[i][j].isDeadEnd()){
 					if(rn.nextInt(100) >= 75){
-						treasure.add(new Treasure(i,j));
+						fuel.add(new Fuel(i,j, value));
 					}
 				}
 			}
@@ -326,9 +343,9 @@ public class MazeImp{
 			if(grid[player.getX()][player.getY()].equals(end)){
 				firePlayerFinished();
 			}
-			for(Treasure t:treasure){
+			for(Fuel t:fuel){
 				if(player.getX() == t.getX() && player.getY() == t.getY()){
-					treasure.remove(t);
+					fuel.remove(t);
 					player.giveFuel(t.getValue());
 					fireTreasureCollected();
 					break;
@@ -423,13 +440,17 @@ public class MazeImp{
 		return player;
 	}
 	
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+	
 	public void consumeFuel(){
 		player.fuelDecrement();
 		fireFuelConsumed();
 	}
 	
-	public ArrayList<Treasure> getTreasure() {
-		return (ArrayList<Treasure>) treasure.clone();
+	public ArrayList<Fuel> getFuel() {
+		return (ArrayList<Fuel>) fuel.clone();
 	}
 
 	Node start;
@@ -440,7 +461,14 @@ public class MazeImp{
 	Node[][] grid;
 	EventListenerList mazeListeners;
 	private Player player;
-	private ArrayList<Treasure> treasure;
+	
+
+	private ArrayList<Fuel> fuel;
+
+
+	public Node getEnd() {
+		return end;
+	}
 
 	
 }
