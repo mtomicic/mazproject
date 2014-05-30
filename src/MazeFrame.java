@@ -13,6 +13,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.beans.PropertyChangeListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.EventObject;
 
 import javax.swing.AbstractAction;
@@ -33,11 +36,12 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.text.DefaultCaret;
 
+
 public class MazeFrame extends JFrame{
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run(){
-		
+			
 			new MazeFrame();
 		}
 		
@@ -48,13 +52,15 @@ public class MazeFrame extends JFrame{
 		this.setTitle("MAZE GAME");	
 		mainPanel = new JPanel();
 		this.add(mainPanel);
-	
+		
 		
 		initActions();
 		initMenuScreen();
 		initGameScreen();
 		initDifficultyScreen();
-		initHowPlayScreen();
+		initHowPlayScreen1();
+		initHowPlayScreen2();
+		initHowPlayScreen3();
 		initWinScreen();
 		initLoseScreen();
 //		createPuaseFrame();
@@ -117,7 +123,9 @@ public class MazeFrame extends JFrame{
 		mainPanel.add(menuScreen, "mainmenu");
 		mainPanel.add(gameScreen, "game");
 		mainPanel.add(difficultyScreen, "diff");
-		mainPanel.add(howPlayScreen, "howPlay");
+		mainPanel.add(howPlayScreen1, "howPlay1");
+		mainPanel.add(howPlayScreen2, "howPlay2");
+		mainPanel.add(howPlayScreen3, "howPlay3");
 		mainPanel.add(winScreen, "win");
 		mainPanel.add(loseScreen, "lose");
 		mainPanel.add(pauseScreen, "pause");
@@ -245,22 +253,28 @@ public class MazeFrame extends JFrame{
 		menuScreen.setLayout(new GridBagLayout());
 		GridBagConstraints gc =  new GridBagConstraints();
 		menuScreen.setBackground(Color.GRAY);
-		gc.ipady = 20;
-		gc.ipadx = 115;
-		gc.anchor = GridBagConstraints.CENTER;
+		gc.ipady = 50;
+		gc.anchor = GridBagConstraints.NORTH;
 		gc.gridy = 0;
+		JLabel mazeLabel = new JLabel("MAZE GAME", SwingConstants.CENTER);
+		mazeLabel.setFont(new Font(mazeLabel.getFont().getName(), Font.BOLD, 26));
+		mazeLabel.setForeground(Color.YELLOW);
+		menuScreen.add(mazeLabel, gc);
+		gc.ipadx = 115;
+		gc.ipady = 20;
+		gc.gridy = 1;
 //		gc.weighty = 1;
 		JButton startGame = new JButton(goDifficultySelect);
 		menuScreen.add(startGame, gc);
 		
 		JButton howPlay = new JButton(goHowPlay);
-		gc.gridy = 1;
+		gc.gridy = 2;
 		gc.ipadx = 0;
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		menuScreen.add(howPlay, gc);
 		
 		JButton exitButton = new JButton(exitGame);
-		gc.gridy = 2;
+		gc.gridy = 3;
 		gc.ipadx = 0;
 		menuScreen.add(exitButton, gc);
 	}
@@ -342,11 +356,11 @@ public class MazeFrame extends JFrame{
 		
 	}
 	
-	private void initHowPlayScreen(){
-		howPlayScreen = new JPanel();
-		howPlayScreen.setLayout(new GridBagLayout());
+	private void initHowPlayScreen1(){
+		howPlayScreen1 = new JPanel();
+		howPlayScreen1.setLayout(new GridBagLayout());
 		GridBagConstraints gc =  new GridBagConstraints();
-		howPlayScreen.setBackground(Color.GRAY);
+		howPlayScreen1.setBackground(Color.GRAY);
 		howToPlay = new JTextArea();
 		howToPlay.setBackground(null);
 		howToPlay.setForeground(Color.YELLOW);
@@ -355,18 +369,149 @@ public class MazeFrame extends JFrame{
 		howToPlay.setPreferredSize(new Dimension(400,300));
 		howToPlay.setWrapStyleWord(true);
 		howToPlay.setHighlighter(null);
-		howToPlay.setText("ENTER TEXT HERE");
+		
+		howToPlay.setText("You are an explorer who is trying to escape a maze you are stuck in."
+				+ " In order to escape you must make your way from the top left corner to the bottom"
+				+ " right corner. However you must keep an eye on your fuel which is depleting whilst"
+				+ " you are trying to escape. But all is not lost as there is often fuel nearby which"
+				+ " can be used to replenish your supply. \nYour character is controlled by either using"
+				+ " the up, down, left and right arrow keys or alternatively you can use 'W' to go up, "
+				+ "'S' to go down 'A' to go left and 'D' to go right. There are three different difficulties"
+				+ " that you can select from:\n- Easy is the easiest of them all and is the smallest maze."
+				+ "\n- Medium is like Easy but has a lerger maze which is harder to get through.\n- Hard is"
+				+ " obviously, Hard olny shows a little bit of the maze and how much is shown depends on how "
+				+ "much fuel you have in your possession. More fuel means you can see more of the maze."
+				+ "\nThroughout all of your maze navigation you will be timed. This time will be displayed at "
+				+ "the end of the game so that you will know how fast you completed the maze.");
+		
 		howToPlay.setVisible(false);
-		howPlayScreen.add(howToPlay, gc);
+		gc.gridwidth = 0;
 		gc.gridy = 0;
+		howPlayScreen1.add(howToPlay, gc);
+		gc.gridwidth = 2;
 		JButton retMainMenu = new JButton(goMenu);
 		gc.gridy = 1;
 		gc.ipady = 20;
+		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.SOUTH;
 		gc.ipadx = 78;
-		howPlayScreen.add(retMainMenu, gc);
+		gc.weightx = 1;
+		howPlayScreen1.add(retMainMenu, gc);
+		gc.gridx = 2;
+		gc.weightx = 1;
+		gc.ipadx = 65;
+		gc.anchor = GridBagConstraints.EAST;
+		JButton nextButton = new JButton(next);
+		howPlayScreen1.add(nextButton, gc);
+		gc.gridx = 0;
+		gc.ipadx = 41;
+		gc.anchor = GridBagConstraints.WEST;
+		JButton prevButton = new JButton(previous);
+		prevButton.setEnabled(false);
+		howPlayScreen1.add(prevButton, gc);
+		
+		
+		
+	}
+	
+	
+	private void initHowPlayScreen2(){
+		howPlayScreen2 = new JPanel();
+		howPlayScreen2.setLayout(new GridBagLayout());
+		GridBagConstraints gc =  new GridBagConstraints();
+		howPlayScreen2.setBackground(Color.GRAY);
+		
+		JTextArea howToPlay2 = new JTextArea();
+		howToPlay2.setBackground(null);
+		howToPlay2.setForeground(Color.YELLOW);
+		howToPlay2.setLineWrap(true);
+		howToPlay2.setEditable(false);
+		howToPlay2.setPreferredSize(new Dimension(400,300));
+		howToPlay2.setWrapStyleWord(true);
+		howToPlay2.setHighlighter(null);
+		
+		howToPlay2.setText("screen2");
+		
+//		howToPlay2.setVisible(false);
+		gc.gridwidth = 0;
+		gc.gridy = 0;
+		howPlayScreen2.add(howToPlay2, gc);
+		
+		
+		gc.gridwidth = 2;
+		JButton retMainMenu = new JButton(goMenu);
+		gc.gridy = 1;
+		gc.ipady = 20;
+		gc.gridx = 1;
+		gc.anchor = GridBagConstraints.SOUTH;
+		gc.ipadx = 78;
+		gc.weightx = 1;
+		howPlayScreen2.add(retMainMenu, gc);
+		gc.gridx = 2;
+		gc.weightx = 1;
+		gc.ipadx = 65;
+		gc.anchor = GridBagConstraints.EAST;
+		JButton nextButton = new JButton(next);
+		howPlayScreen2.add(nextButton, gc);
+		gc.gridx = 0;
+		gc.ipadx = 41;
+		gc.anchor = GridBagConstraints.WEST;
+		JButton prevButton = new JButton(previous);
+//		prevButton.setEnabled(false);
+		howPlayScreen2.add(prevButton, gc);
+		
+		
+		
 	}
 
+	private void initHowPlayScreen3(){
+		howPlayScreen3 = new JPanel();
+		howPlayScreen3.setLayout(new GridBagLayout());
+		GridBagConstraints gc =  new GridBagConstraints();
+		howPlayScreen3.setBackground(Color.GRAY);
+		
+		JTextArea howToPlay3 = new JTextArea();
+		howToPlay3.setBackground(null);
+		howToPlay3.setForeground(Color.YELLOW);
+		howToPlay3.setLineWrap(true);
+		howToPlay3.setEditable(false);
+		howToPlay3.setPreferredSize(new Dimension(400,300));
+		howToPlay3.setWrapStyleWord(true);
+		howToPlay3.setHighlighter(null);
+		
+		howToPlay3.setText("screen3");
+		
+//		howToPlay2.setVisible(false);
+		gc.gridwidth = 0;
+		gc.gridy = 0;
+		howPlayScreen3.add(howToPlay3, gc);
+		
+		
+		gc.gridwidth = 2;
+		JButton retMainMenu = new JButton(goMenu);
+		gc.gridy = 1;
+		gc.ipady = 20;
+		gc.gridx = 1;
+		gc.anchor = GridBagConstraints.SOUTH;
+		gc.ipadx = 78;
+		gc.weightx = 1;
+		howPlayScreen3.add(retMainMenu, gc);
+		gc.gridx = 2;
+		gc.weightx = 1;
+		gc.ipadx = 65;
+		gc.anchor = GridBagConstraints.EAST;
+		JButton nextButton = new JButton(next);
+		nextButton.setEnabled(false);
+		howPlayScreen3.add(nextButton, gc);
+		gc.gridx = 0;
+		gc.ipadx = 41;
+		gc.anchor = GridBagConstraints.WEST;
+		JButton prevButton = new JButton(previous);
+		howPlayScreen3.add(prevButton, gc);
+		
+		
+		
+	}
 	
 	private void initPauseScreen(){
 		pauseScreen = new JPanel();
@@ -415,6 +560,7 @@ public class MazeFrame extends JFrame{
 				difficultyScreen.requestFocusInWindow();
 			}
 		};
+		
 		
 		goEasy = new AbstractAction("Easy"){
 			
@@ -492,6 +638,7 @@ public class MazeFrame extends JFrame{
 				if(board != null){
 					gameScreen.remove(board);
 				}
+				howPlayShowing = 1;
 				layout.show(mainPanel, "mainmenu");
 				menuScreen.requestFocus();
 				timeCount = 0;
@@ -525,8 +672,8 @@ public class MazeFrame extends JFrame{
 		goHowPlay = new AbstractAction("How To Play"){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				layout.show(mainPanel, "howPlay");
-				howPlayScreen.requestFocus();
+				layout.show(mainPanel, "howPlay1");
+				howPlayScreen1.requestFocus();
 				howToPlay.setVisible(true);
 				frame.setMinimumSize(new Dimension(463,390));
 				frame.pack();
@@ -565,6 +712,37 @@ public class MazeFrame extends JFrame{
 				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()+ 20));
 				frame.pack();
 //				frame.setVisible(true);
+			}
+		};
+		
+		
+		next = new AbstractAction("Next"){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (howPlayShowing != 3){
+					howPlayShowing++;
+					layout.show(mainPanel, "howPlay" + howPlayShowing);
+				}
+//				layout.show(mainPanel, "diff");
+//				scoreLabel.setText("Fuel: " + 0);
+//				difficultyScreen.requestFocusInWindow();
+			}
+		};
+		
+		
+		previous = new AbstractAction("Previous"){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (howPlayShowing != 1){
+
+					howPlayShowing--;
+					layout.show(mainPanel, "howPlay" + howPlayShowing);
+				}
+				
+				
+//				layout.show(mainPanel, "diff");
+//				scoreLabel.setText("Fuel: " + 0);
+//				difficultyScreen.requestFocusInWindow();
 			}
 		};
 	}
@@ -612,7 +790,9 @@ public class MazeFrame extends JFrame{
 	private JPanel gameScreen;
 	private JPanel menuScreen;
 	private JPanel difficultyScreen;
-	private JPanel howPlayScreen;
+	private JPanel howPlayScreen1;
+	private JPanel howPlayScreen2;
+	private JPanel howPlayScreen3;
 	private JPanel winScreen;
 	private JPanel loseScreen;
 	private JPanel pauseScreen;
@@ -627,6 +807,8 @@ public class MazeFrame extends JFrame{
 	private Action exitGame;
 	private Action showPause;
 	private static Action resumeGame;
+	private Action next;
+	private Action previous;
 
 	private Board board;
 	private MazeImp maze;
@@ -646,5 +828,7 @@ public class MazeFrame extends JFrame{
 	
 //	private static JFrame pauseFrame; 
 	private JLabel pauseTimeLabel;
+	
+	private int howPlayShowing = 1;
 	
 }
