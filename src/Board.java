@@ -24,6 +24,7 @@ public class Board extends JPanel implements ActionListener{
 	private int mapWidth;
 	private int mapHeight;
 	private boolean survivalOn;
+	private boolean pathDisplay;
 	private static int tileSize = 25;
 	private static int playerSize = 10;
 	private static int treasureSize = 4;
@@ -44,7 +45,15 @@ public class Board extends JPanel implements ActionListener{
 		timer = new Timer(25, this);
 		timer.start();
 		survivalOn = false;
-		
+		pathDisplay = false;
+	}
+	
+	public void displayPath(){
+		pathDisplay = true;
+	}
+	
+	public void hidePath(){
+		pathDisplay = false;
 	}
 	
 	@Override
@@ -76,6 +85,9 @@ public class Board extends JPanel implements ActionListener{
 		}
 		if(survivalOn){
 			drawMask(g2d);
+		}
+		if(pathDisplay){
+			drawPath(g);
 		}
 	}
 	
@@ -111,8 +123,8 @@ public class Board extends JPanel implements ActionListener{
 		BufferedImage image = new BufferedImage(mapWidth*tileSize, mapHeight*tileSize, BufferedImage.TYPE_INT_ARGB);
 		
 		Player player = mazeModel.getPlayer();
-		int topLeftX = player.getX()*tileSize - player.getFuel()/2 + (tileSize - playerSize)/2 + playerSize/2;
-		int topLeftY = player.getY()*tileSize - player.getFuel()/2 + (tileSize - playerSize)/2 + playerSize/2; 
+		double topLeftX = player.getX()*tileSize - player.getFuel()/2 + (tileSize - playerSize)/2 + playerSize/2;
+		double topLeftY = player.getY()*tileSize - player.getFuel()/2 + (tileSize - playerSize)/2 + playerSize/2; 
 		
 		Area mask = new Area(new Rectangle2D.Double(0, 0, mapWidth*tileSize, mapHeight*tileSize));
 		Area hole = new Area(new Ellipse2D.Double(topLeftX, topLeftY, player.getFuel(), player.getFuel()));
@@ -136,7 +148,6 @@ public class Board extends JPanel implements ActionListener{
 				mazeModel.movePlayer(0, 1);	
 			} else if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
 				mazeModel.movePlayer(-1, 0);
-		
 			} else if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
 				mazeModel.movePlayer(1, 0);		
 			}
@@ -168,24 +179,21 @@ public class Board extends JPanel implements ActionListener{
 		return (mapHeight+1)*tileSize;
 	}
 	
-	/*
-
-	public void drawPath(Graphics g) {
-		
-		ArrayList<Node> path = testMaze.getPath(testMaze.getCell(player.getX(),player.getY()), 
-								testMaze.getCell(mapWidth, mapHeight), new ManhattenHeuristic()); 
-		int dx;
-		int dy;
-		for(int i = 1; i < path.size() - 1; i++){
-			dx = path.get(i + 1).getxPos() - path.get(i - 1).getxPos();
-			dy = path.get(i + 1).getyPos() - path.get(i - 1).getyPos();
-			
-			if(dx == 0){
-				g.drawImage(map.getVerticalPath(), path.get(i).getxPos()*tileSize + 7, path.get(i).getxPos()*tileSize, null);
-			}
-		}
 	
+	
+	
+	public void drawPath(Graphics g) {
+		Graphics2D g2d = (Graphics2D) g;
+		ArrayList<Node> path = mazeModel.getPath(mazeModel.getCell(mazeModel.getPlayer().getX(),mazeModel.getPlayer().getY()), 
+								mazeModel.getEnd(), new ManhattenHeuristic()); 
+	
+		for(int i = 0; i < path.size() - 1; i++){
+			g2d.setColor(Color.red);
+			g2d.drawLine(path.get(i).getxPos()*tileSize + tileSize/2, path.get(i).getyPos()*tileSize + tileSize/2, 
+						path.get(i+1).getxPos()*tileSize + tileSize/2, path.get(i+1).getyPos()*tileSize + tileSize/2);
+		}
+		System.out.println(path);
 	}
-	*/
+	
 	
 }

@@ -25,13 +25,20 @@ public class State {
 		return node.equals(((State)o).getNode());
 	}
 	
+	@Override
+	public String toString() {
+		return node.toString();
+	}
+	
 	/**
 	 * @return the previous
 	 */
 	public State getPrevious() {
 		return previous;
 	}
-
+	
+	
+	
 	private State previous;
 	private Node node;
 	private int g;

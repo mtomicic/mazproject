@@ -11,6 +11,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.EventObject;
 
 import javax.swing.AbstractAction;
@@ -125,8 +126,7 @@ public class MazeFrame extends JFrame{
 		        		timeLabel.setText(currentTime + " sec");
 			
 			        	maze.consumeFuel();
-			        	System.out.print(maze.getPlayer().getFuel());
-			        	scoreLabel.setText("Fuel: " + maze.getPlayer().getFuel());
+			        	scoreLabel.setText("Fuel: " + new DecimalFormat("#").format(maze.getPlayer().getFuel()));
 		
 		        	} else {
 		        		timeLabel.setText("way too long");
@@ -136,7 +136,7 @@ public class MazeFrame extends JFrame{
 		        }
 		};
 		
-		timer = new Timer(50, timerListener);
+		timer = new Timer(75, timerListener);
 		    
 		    
 		JPanel gameMenu = new JPanel();
@@ -318,7 +318,7 @@ public class MazeFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				timer.start();
 				timeStart = System.currentTimeMillis();
-				maze = new MazeImp(15,15);
+				maze = new MazeImp(6,6);
 				board = new Board(maze);
 				maze.addMazeListener(new boardListener());
 				gameScreen.add(board, BorderLayout.CENTER);
@@ -360,7 +360,7 @@ public class MazeFrame extends JFrame{
 				timeStart = System.currentTimeMillis();
 				maze = new MazeImp(25,25);
 				//maze.randomEnd(new ManhattenHeuristic());
-				maze.setPlayer(new Player(0,0,4));
+				maze.setPlayer(new Player(0,0,0.02));
 				//maze.addLoops(10);
 				board = new Board(maze);
 				board.activateSurvival();
@@ -398,7 +398,7 @@ public class MazeFrame extends JFrame{
 		drawPath = new AbstractAction("Help"){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//board.drawPath();
+				board.displayPath();
 				gameScreen.getComponent(1).requestFocus();
 				timeCount +=20;
 				timeLabel.setText(timeCount + " sec");
@@ -483,7 +483,9 @@ public class MazeFrame extends JFrame{
 
 		@Override
 		public void playerMoved(EventObject e) {
+			board.hidePath();
 			board.repaint();
+			
 		}
 
 		@Override
@@ -502,7 +504,7 @@ public class MazeFrame extends JFrame{
 		public void treasureCollected(EventObject e) {
 			// TODO Auto-generated method stub
 			//removeTime(2);
-			scoreLabel.setText("Fuel: " + maze.getPlayer().getFuel());
+			scoreLabel.setText("Fuel: " + new DecimalFormat("#").format(maze.getPlayer().getFuel()));
 		}
 
 		@Override

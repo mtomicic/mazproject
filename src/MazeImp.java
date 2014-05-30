@@ -1,5 +1,6 @@
 import java.awt.geom.RectangularShape;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.EventObject;
 import java.util.HashSet;
@@ -30,7 +31,7 @@ public class MazeImp{
 		mazeListeners = new EventListenerList();
 		start = grid[0][0];
 		player = new Player(0,0);
-		System.out.print("yolo" + player.getFuel());
+		//System.out.print("yolo" + player.getFuel());
 		Random rn = new Random();
 		int i = rn.nextInt(xSize);
 		int j = rn.nextInt(ySize);
@@ -258,58 +259,61 @@ public class MazeImp{
 	}
 	
 
+
 	public ArrayList<Node> getPath(Node start, Node goal, Heuristic h){
 		PriorityQueue<State> open = new PriorityQueue<State>(11, new Comparator<State>(){
-
-			public int compare(State arg0, State arg1) {
-				if(arg0.getF() > arg1.getF()){
-					return 1;
-				}
-				if(arg0.getF() < arg1.getF()){
-					return -1;
-				}
-				return 0;
+		
+		public int compare(State arg0, State arg1) {
+			if(arg0.getF() > arg1.getF()){
+				return 1;
 			}
-		
+			if(arg0.getF() < arg1.getF()){
+				return -1;
+			}
+			return 0;
+			}
+			
 		});
-		
+		HashSet<State> closedSet = new HashSet<State>();
 		
 		
 		open.add(new State(start, 0, h.getH(start, goal), null));
 		
 		while(!open.isEmpty()){
 			State curr = open.poll();
+			closedSet.add(curr);
 			//System.out.println(curr.getNode());
 			if(curr.getNode().equals(goal)){
 				return constructPath(curr);
 			}else{
-				if(curr.getNode().getNorth() != null){
-					open.add(new State(curr.getNode().getNorth(), curr.getG() + 1, 
-							h.getH(curr.getNode(), goal), curr));
+				if(curr.getNode().getNorth() != null && !closedSet.contains(curr.getNode().getNorth())){
+					open.add(new State(curr.getNode().getNorth(), curr.getG() + 1,
+							h.getH(curr.getNode().getNorth(), goal), curr));
 				}
-				
-				if(curr.getNode().getSouth() != null){
-					open.add(new State(curr.getNode().getSouth(), curr.getG() + 1, 
-							h.getH(curr.getNode(), goal), curr));
+			
+				if(curr.getNode().getSouth() != null && !closedSet.contains(curr.getNode().getSouth())){
+					open.add(new State(curr.getNode().getSouth(), curr.getG() + 1,
+							h.getH(curr.getNode().getSouth(), goal), curr));
 				}
-				
-				if(curr.getNode().getEast() != null){
-					open.add(new State(curr.getNode().getEast(), curr.getG() + 1, 
-							h.getH(curr.getNode(), goal), curr));
+			
+				if(curr.getNode().getEast() != null && !closedSet.contains(curr.getNode().getEast())){
+					open.add(new State(curr.getNode().getEast(), curr.getG() + 1,
+							h.getH(curr.getNode().getEast(), goal), curr));
 				}
-				
-				if(curr.getNode().getWest() != null){
-					open.add(new State(curr.getNode().getWest(), curr.getG() + 1, 
-							h.getH(curr.getNode(), goal), curr));
+			
+				if(curr.getNode().getWest() != null && !closedSet.contains(curr.getNode().getWest())){
+					open.add(new State(curr.getNode().getWest(), curr.getG() + 1,
+							h.getH(curr.getNode().getWest(), goal), curr));
 				}
 			}
 		}
-		
-		
+	
+	
 		return null;
-		
-			
+	
+	
 	}
+	
 	
 	private ArrayList<Node> constructPath(State s){
 		ArrayList<Node> reversedPath = new ArrayList<Node>();
