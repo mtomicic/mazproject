@@ -243,22 +243,28 @@ public class MazeFrame extends JFrame{
 		menuScreen.setLayout(new GridBagLayout());
 		GridBagConstraints gc =  new GridBagConstraints();
 		menuScreen.setBackground(Color.GRAY);
-		gc.ipady = 20;
-		gc.ipadx = 115;
-		gc.anchor = GridBagConstraints.CENTER;
+		gc.ipady = 50;
+		gc.anchor = GridBagConstraints.NORTH;
 		gc.gridy = 0;
+		JLabel mazeLabel = new JLabel("MAZE GAME", SwingConstants.CENTER);
+		mazeLabel.setFont(new Font(mazeLabel.getFont().getName(), Font.BOLD, 26));
+		mazeLabel.setForeground(Color.YELLOW);
+		menuScreen.add(mazeLabel, gc);
+		gc.ipadx = 115;
+		gc.ipady = 20;
+		gc.gridy = 1;
 //		gc.weighty = 1;
 		JButton startGame = new JButton(goDifficultySelect);
 		menuScreen.add(startGame, gc);
 		
 		JButton howPlay = new JButton(goHowPlay);
-		gc.gridy = 1;
+		gc.gridy = 2;
 		gc.ipadx = 0;
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		menuScreen.add(howPlay, gc);
 		
 		JButton exitButton = new JButton(exitGame);
-		gc.gridy = 2;
+		gc.gridy = 3;
 		gc.ipadx = 0;
 		menuScreen.add(exitButton, gc);
 	}
