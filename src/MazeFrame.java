@@ -396,19 +396,23 @@ public class MazeFrame extends JFrame{
 		gc.anchor = GridBagConstraints.SOUTH;
 		gc.ipadx = 78;
 		gc.weightx = 1;
+		retMainMenu.setPreferredSize(new Dimension(95, 26));
 		howPlayScreen1.add(retMainMenu, gc);
 		gc.gridx = 2;
 		gc.weightx = 1;
-		gc.ipadx = 65;
+		gc.ipadx = 0;
 		gc.anchor = GridBagConstraints.EAST;
 		JButton nextButton = new JButton(next);
+		nextButton.setPreferredSize(new Dimension(120, 26));
 		howPlayScreen1.add(nextButton, gc);
 		gc.gridx = 0;
-		gc.ipadx = 41;
+		gc.ipadx = 0;
 		gc.anchor = GridBagConstraints.WEST;
 		JButton prevButton = new JButton(previous);
+		prevButton.setPreferredSize(new Dimension(120, 26));
 		prevButton.setEnabled(false);
 		howPlayScreen1.add(prevButton, gc);
+
 		
 		
 		
@@ -446,19 +450,24 @@ public class MazeFrame extends JFrame{
 		gc.anchor = GridBagConstraints.SOUTH;
 		gc.ipadx = 78;
 		gc.weightx = 1;
+		retMainMenu.setPreferredSize(new Dimension(95, 26));
 		howPlayScreen2.add(retMainMenu, gc);
 		gc.gridx = 2;
 		gc.weightx = 1;
-		gc.ipadx = 65;
+		gc.ipadx = 0;
 		gc.anchor = GridBagConstraints.EAST;
 		JButton nextButton = new JButton(next);
+		nextButton.setPreferredSize(new Dimension(120, 26));
 		howPlayScreen2.add(nextButton, gc);
 		gc.gridx = 0;
-		gc.ipadx = 41;
+		gc.ipadx = 0;
 		gc.anchor = GridBagConstraints.WEST;
 		JButton prevButton = new JButton(previous);
+		prevButton.setPreferredSize(new Dimension(120, 26));
 //		prevButton.setEnabled(false);
 		howPlayScreen2.add(prevButton, gc);
+		
+
 		
 		
 		
@@ -495,18 +504,21 @@ public class MazeFrame extends JFrame{
 		gc.anchor = GridBagConstraints.SOUTH;
 		gc.ipadx = 78;
 		gc.weightx = 1;
+		retMainMenu.setPreferredSize(new Dimension(95, 26));
 		howPlayScreen3.add(retMainMenu, gc);
 		gc.gridx = 2;
 		gc.weightx = 1;
-		gc.ipadx = 65;
+		gc.ipadx = 0;
 		gc.anchor = GridBagConstraints.EAST;
 		JButton nextButton = new JButton(next);
+		nextButton.setPreferredSize(new Dimension(120, 26));
 		nextButton.setEnabled(false);
 		howPlayScreen3.add(nextButton, gc);
 		gc.gridx = 0;
-		gc.ipadx = 41;
+		gc.ipadx = 0;
 		gc.anchor = GridBagConstraints.WEST;
 		JButton prevButton = new JButton(previous);
+		prevButton.setPreferredSize(new Dimension(120, 26));
 		howPlayScreen3.add(prevButton, gc);
 		
 		
@@ -832,3 +844,6 @@ public class MazeFrame extends JFrame{
 	private int howPlayShowing = 1;
 	
 }
+
+
+
