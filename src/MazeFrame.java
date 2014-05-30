@@ -57,7 +57,9 @@ public class MazeFrame extends JFrame{
 		initMenuScreen();
 		initGameScreen();
 		initDifficultyScreen();
-		initHowPlayScreen();
+		initHowPlayScreen1();
+		initHowPlayScreen2();
+		initHowPlayScreen3();
 		initWinScreen();
 		initLoseScreen();
 //		createPuaseFrame();
@@ -120,7 +122,9 @@ public class MazeFrame extends JFrame{
 		mainPanel.add(menuScreen, "mainmenu");
 		mainPanel.add(gameScreen, "game");
 		mainPanel.add(difficultyScreen, "diff");
-		mainPanel.add(howPlayScreen, "howPlay");
+		mainPanel.add(howPlayScreen1, "howPlay1");
+		mainPanel.add(howPlayScreen2, "howPlay2");
+		mainPanel.add(howPlayScreen3, "howPlay3");
 		mainPanel.add(winScreen, "win");
 		mainPanel.add(loseScreen, "lose");
 		mainPanel.add(pauseScreen, "pause");
@@ -350,11 +354,11 @@ public class MazeFrame extends JFrame{
 		
 	}
 	
-	private void initHowPlayScreen(){
-		howPlayScreen = new JPanel();
-		howPlayScreen.setLayout(new GridBagLayout());
+	private void initHowPlayScreen1(){
+		howPlayScreen1 = new JPanel();
+		howPlayScreen1.setLayout(new GridBagLayout());
 		GridBagConstraints gc =  new GridBagConstraints();
-		howPlayScreen.setBackground(Color.GRAY);
+		howPlayScreen1.setBackground(Color.GRAY);
 		howToPlay = new JTextArea();
 		howToPlay.setBackground(null);
 		howToPlay.setForeground(Color.YELLOW);
@@ -379,16 +383,133 @@ public class MazeFrame extends JFrame{
 				+ "the end of the game so that you will know how fast you completed the maze.");
 		
 		howToPlay.setVisible(false);
-		howPlayScreen.add(howToPlay, gc);
+		gc.gridwidth = 0;
 		gc.gridy = 0;
+		howPlayScreen1.add(howToPlay, gc);
+		gc.gridwidth = 2;
 		JButton retMainMenu = new JButton(goMenu);
 		gc.gridy = 1;
 		gc.ipady = 20;
+		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.SOUTH;
 		gc.ipadx = 78;
-		howPlayScreen.add(retMainMenu, gc);
+		gc.weightx = 1;
+		howPlayScreen1.add(retMainMenu, gc);
+		gc.gridx = 2;
+		gc.weightx = 1;
+		gc.ipadx = 65;
+		gc.anchor = GridBagConstraints.EAST;
+		JButton nextButton = new JButton(next);
+		howPlayScreen1.add(nextButton, gc);
+		gc.gridx = 0;
+		gc.ipadx = 41;
+		gc.anchor = GridBagConstraints.WEST;
+		JButton prevButton = new JButton(previous);
+		prevButton.setEnabled(false);
+		howPlayScreen1.add(prevButton, gc);
+		
+		
+		
+	}
+	
+	
+	private void initHowPlayScreen2(){
+		howPlayScreen2 = new JPanel();
+		howPlayScreen2.setLayout(new GridBagLayout());
+		GridBagConstraints gc =  new GridBagConstraints();
+		howPlayScreen2.setBackground(Color.GRAY);
+		
+		JTextArea howToPlay2 = new JTextArea();
+		howToPlay2.setBackground(null);
+		howToPlay2.setForeground(Color.YELLOW);
+		howToPlay2.setLineWrap(true);
+		howToPlay2.setEditable(false);
+		howToPlay2.setPreferredSize(new Dimension(400,300));
+		howToPlay2.setWrapStyleWord(true);
+		howToPlay2.setHighlighter(null);
+		
+		howToPlay2.setText("screen2");
+		
+//		howToPlay2.setVisible(false);
+		gc.gridwidth = 0;
+		gc.gridy = 0;
+		howPlayScreen2.add(howToPlay2, gc);
+		
+		
+		gc.gridwidth = 2;
+		JButton retMainMenu = new JButton(goMenu);
+		gc.gridy = 1;
+		gc.ipady = 20;
+		gc.gridx = 1;
+		gc.anchor = GridBagConstraints.SOUTH;
+		gc.ipadx = 78;
+		gc.weightx = 1;
+		howPlayScreen2.add(retMainMenu, gc);
+		gc.gridx = 2;
+		gc.weightx = 1;
+		gc.ipadx = 65;
+		gc.anchor = GridBagConstraints.EAST;
+		JButton nextButton = new JButton(next);
+		howPlayScreen2.add(nextButton, gc);
+		gc.gridx = 0;
+		gc.ipadx = 41;
+		gc.anchor = GridBagConstraints.WEST;
+		JButton prevButton = new JButton(previous);
+//		prevButton.setEnabled(false);
+		howPlayScreen2.add(prevButton, gc);
+		
+		
+		
 	}
 
+	private void initHowPlayScreen3(){
+		howPlayScreen3 = new JPanel();
+		howPlayScreen3.setLayout(new GridBagLayout());
+		GridBagConstraints gc =  new GridBagConstraints();
+		howPlayScreen3.setBackground(Color.GRAY);
+		
+		JTextArea howToPlay3 = new JTextArea();
+		howToPlay3.setBackground(null);
+		howToPlay3.setForeground(Color.YELLOW);
+		howToPlay3.setLineWrap(true);
+		howToPlay3.setEditable(false);
+		howToPlay3.setPreferredSize(new Dimension(400,300));
+		howToPlay3.setWrapStyleWord(true);
+		howToPlay3.setHighlighter(null);
+		
+		howToPlay3.setText("screen3");
+		
+//		howToPlay2.setVisible(false);
+		gc.gridwidth = 0;
+		gc.gridy = 0;
+		howPlayScreen3.add(howToPlay3, gc);
+		
+		
+		gc.gridwidth = 2;
+		JButton retMainMenu = new JButton(goMenu);
+		gc.gridy = 1;
+		gc.ipady = 20;
+		gc.gridx = 1;
+		gc.anchor = GridBagConstraints.SOUTH;
+		gc.ipadx = 78;
+		gc.weightx = 1;
+		howPlayScreen3.add(retMainMenu, gc);
+		gc.gridx = 2;
+		gc.weightx = 1;
+		gc.ipadx = 65;
+		gc.anchor = GridBagConstraints.EAST;
+		JButton nextButton = new JButton(next);
+		nextButton.setEnabled(false);
+		howPlayScreen3.add(nextButton, gc);
+		gc.gridx = 0;
+		gc.ipadx = 41;
+		gc.anchor = GridBagConstraints.WEST;
+		JButton prevButton = new JButton(previous);
+		howPlayScreen3.add(prevButton, gc);
+		
+		
+		
+	}
 	
 	private void initPauseScreen(){
 		pauseScreen = new JPanel();
@@ -437,6 +558,7 @@ public class MazeFrame extends JFrame{
 				difficultyScreen.requestFocusInWindow();
 			}
 		};
+		
 		
 		goEasy = new AbstractAction("Easy"){
 			
@@ -509,6 +631,7 @@ public class MazeFrame extends JFrame{
 				if(board != null){
 					gameScreen.remove(board);
 				}
+				howPlayShowing = 1;
 				layout.show(mainPanel, "mainmenu");
 				menuScreen.requestFocus();
 				timeCount = 0;
@@ -541,8 +664,8 @@ public class MazeFrame extends JFrame{
 		goHowPlay = new AbstractAction("How To Play"){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				layout.show(mainPanel, "howPlay");
-				howPlayScreen.requestFocus();
+				layout.show(mainPanel, "howPlay1");
+				howPlayScreen1.requestFocus();
 				howToPlay.setVisible(true);
 				frame.setMinimumSize(new Dimension(463,390));
 				frame.pack();
@@ -581,6 +704,37 @@ public class MazeFrame extends JFrame{
 				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()+ 20));
 				frame.pack();
 //				frame.setVisible(true);
+			}
+		};
+		
+		
+		next = new AbstractAction("Next"){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (howPlayShowing != 3){
+					howPlayShowing++;
+					layout.show(mainPanel, "howPlay" + howPlayShowing);
+				}
+//				layout.show(mainPanel, "diff");
+//				scoreLabel.setText("Fuel: " + 0);
+//				difficultyScreen.requestFocusInWindow();
+			}
+		};
+		
+		
+		previous = new AbstractAction("Previous"){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (howPlayShowing != 1){
+
+					howPlayShowing--;
+					layout.show(mainPanel, "howPlay" + howPlayShowing);
+				}
+				
+				
+//				layout.show(mainPanel, "diff");
+//				scoreLabel.setText("Fuel: " + 0);
+//				difficultyScreen.requestFocusInWindow();
 			}
 		};
 	}
@@ -676,7 +830,9 @@ public class MazeFrame extends JFrame{
 	private JPanel gameScreen;
 	private JPanel menuScreen;
 	private JPanel difficultyScreen;
-	private JPanel howPlayScreen;
+	private JPanel howPlayScreen1;
+	private JPanel howPlayScreen2;
+	private JPanel howPlayScreen3;
 	private JPanel winScreen;
 	private JPanel loseScreen;
 	private JPanel pauseScreen;
@@ -691,6 +847,8 @@ public class MazeFrame extends JFrame{
 	private Action exitGame;
 	private Action showPause;
 	private static Action resumeGame;
+	private Action next;
+	private Action previous;
 
 	private Board board;
 	private MazeImp maze;
@@ -710,5 +868,7 @@ public class MazeFrame extends JFrame{
 	
 //	private static JFrame pauseFrame; 
 	private JLabel pauseTimeLabel;
+	
+	private int howPlayShowing = 1;
 	
 }
