@@ -12,6 +12,9 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.EventObject;
 
 import javax.swing.AbstractAction;
@@ -32,11 +35,12 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.text.DefaultCaret;
 
+
 public class MazeFrame extends JFrame{
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run(){
-		
+			
 			new MazeFrame();
 		}
 		
@@ -47,7 +51,7 @@ public class MazeFrame extends JFrame{
 		this.setTitle("MAZE GAME");	
 		mainPanel = new JPanel();
 		this.add(mainPanel);
-	
+		
 		
 		initActions();
 		initMenuScreen();
@@ -359,7 +363,21 @@ public class MazeFrame extends JFrame{
 		howToPlay.setPreferredSize(new Dimension(400,300));
 		howToPlay.setWrapStyleWord(true);
 		howToPlay.setHighlighter(null);
-		howToPlay.setText("ENTER TEXT HERE");
+		
+		howToPlay.setText("You are an explorer who is trying to escape a maze you are stuck in."
+				+ " In order to escape you must make your way from the top left corner to the bottom"
+				+ " right corner. However you must keep an eye on your fuel which is depleting whilst"
+				+ " you are trying to escape. But all is not lost as there is often fuel nearby which"
+				+ " can be used to replenish your supply. \nYour character is controlled by either using"
+				+ " the up, down, left and right arrow keys or alternatively you can use 'W' to go up, "
+				+ "'S' to go down 'A' to go left and 'D' to go right. There are three different difficulties"
+				+ " that you can select from:\n- Easy is the easiest of them all and is the smallest maze."
+				+ "\n- Medium is like Easy but has a lerger maze which is harder to get through.\n- Hard is"
+				+ " obviously, Hard olny shows a little bit of the maze and how much is shown depends on how "
+				+ "much fuel you have in your possession. More fuel means you can see more of the maze."
+				+ "\nThroughout all of your maze navigation you will be timed. This time will be displayed at "
+				+ "the end of the game so that you will know how fast you completed the maze.");
+		
 		howToPlay.setVisible(false);
 		howPlayScreen.add(howToPlay, gc);
 		gc.gridy = 0;
