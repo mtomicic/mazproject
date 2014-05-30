@@ -182,30 +182,34 @@ public class MazeFrame extends JFrame{
 		gc.weighty = 0;
 		gc.gridx = 0;
 		gc.gridy = 0;
-		gc.anchor = GridBagConstraints.PAGE_START;
+		gc.anchor = GridBagConstraints.NORTH;
 		gameMenu.add(retMainMenu, gc);
 		//gc.ipadx = 45;
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		gc.gridx = 0;
 		gc.gridy = 1;
 		gc.weightx = 0;
-		gc.weighty = 1;
+		gc.weighty = 0;
 		gameMenu.add(helpButton, gc);
 		
 		JButton pauseButton = new JButton(showPause);
 		gc.gridy = 2;
-		gc.weighty = 2;
+		gc.weighty = 0;
 		gc.ipady = 20;
 		gameMenu.add(pauseButton, gc);
-		
 		gc.gridy = 3;
-		gc.weighty = 100;
-		gc.ipady = 0;
+		gc.weighty = 0;
+		gc.ipady = 100;
 		gameMenu.add(scoreLabel, gc);
 		gc.gridy = 4;
-		gc.weighty = 200;
+		gc.weighty = 0;
+		gc.ipady = 0;
 		gameMenu.add(timeLabel,gc);
 		gameScreen.add(gameMenu, BorderLayout.LINE_END);
+		gc.gridy = 5;
+		gc.weighty = 1;
+		JLabel blank = new JLabel(" ");
+		gameMenu.add(blank, gc);
 	}
 	
 	private void initDifficultyScreen(){
