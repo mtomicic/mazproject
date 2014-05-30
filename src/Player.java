@@ -3,15 +3,17 @@
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
-
+/**
+ * Player Class
+ * The player class is a MazeObject
+ * @author mtom521
+ *
+ */
 public class Player extends MazeObject{
-	
-
-	
 	
 	public Player() {
 		super(0,0);
-		ImageIcon img = new ImageIcon("images/bert2_10.jpg");
+		ImageIcon img = new ImageIcon("images/player_new.png");
 		player = img.getImage();
 		fuel = 100;
 	}
@@ -20,8 +22,8 @@ public class Player extends MazeObject{
 		super(x,y);
 		ImageIcon img = new ImageIcon("images/player_new.png");
 		player = img.getImage();
-		fuel = 100;
-		fuelRate = 1;
+		fuel = 0;
+		fuelRate = 0;
 	}
 	
 	public Player(int x, int y, double fr) {
@@ -67,6 +69,7 @@ public class Player extends MazeObject{
 	private Image player;
 	private double velX = 0;
 	private double velY = 0;
+
 }
 
 

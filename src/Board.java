@@ -1,35 +1,32 @@
 
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridBagLayout;
 import java.awt.event.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.EventObject;
+
 
 import javax.swing.*;
 
+/**
+ * Maze View Class
+ * @author mtom521
+ *
+ */
 public class Board extends JPanel implements ActionListener{
-	
-
-	private Timer timer;
-	private Map map;
-	private MazeImp mazeModel;
-	private int mapWidth;
-	private int mapHeight;
-	private boolean survivalOn;
-	private boolean pathDisplay;
-	private static int tileSize = 25;
-	private static int playerSize = 10;
-	private static int treasureSize = 4;
-
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * Constructor for board, takes a mazeImp
+	 * @param m the mazeImp board will use to paint the maze
+	 */
 	public Board(MazeImp m) {
 		mapWidth = m.getxSize();
 		mapHeight = m.getySize();
@@ -37,88 +34,125 @@ public class Board extends JPanel implements ActionListener{
 		
 		map = new Map();
 		addKeyListener(new Al());
-		
 		setFocusable(true);
-		
-		//testMaze.dumpMaze();
-		
 		timer = new Timer(25, this);
 		timer.start();
-		survivalOn = false;
 		pathDisplay = false;
 	}
 	
+	/**
+	 * sets the path to be displayed
+	 */
 	public void displayPath(){
 		pathDisplay = true;
 	}
 	
+	/**
+	 * hides the path
+	 */
 	public void hidePath(){
 		pathDisplay = false;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		//
 	}
 	
+	/**
+	 * paint for swing
+	 */
 	public void paint(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		super.paint(g);
-		g2d.setStroke(new BasicStroke(4));
-		
-		drawMaze(g);
-		
-		g.drawImage(map.getEndImg(),
-					(mazeModel.getEnd().getxPos()*tileSize + (tileSize - 12)/2),
-					(mazeModel.getEnd().getyPos()*tileSize + (tileSize - 12)/2), null);
-		
 
-		g.drawImage(mazeModel.getPlayer().getPlayer(), 
-					mazeModel.getPlayer().getX() * tileSize ,
-					mazeModel.getPlayer().getY() * tileSize , null);
+		drawMaze(g);
+		drawEnd(g);
 		
+		drawFuel(g);
+		
+		if(pathDisplay){
+			drawPath(g2d);
+		}
+		drawPlayer(g);
+		if(mazeModel.survivalOn()){
+			drawMask(g2d);
+		}
+		
+	}	
+	
+	/**
+	 * draws the end tile
+	 * @param g
+	 */
+	private void drawEnd(Graphics g){
+		g.drawImage(map.getEndImg(),
+				(mazeModel.getEnd().getxPos()*tileSize + (tileSize - 12)/2),
+				(mazeModel.getEnd().getyPos()*tileSize + (tileSize - 12)/2), null);
+	}
+	
+	/**
+	 * Draws the fuel around the map
+	 * @param g
+	 */
+	private void drawFuel(Graphics g){
 		ArrayList<Fuel> fuels= mazeModel.getFuel();
 		for(Fuel t: fuels){
 		 	g.drawImage(map.getFuelImg(),
 		 				t.getX() *tileSize , 
 		 				t.getY() * tileSize , null);
 		}
-		if(survivalOn){
-			drawMask(g2d);
-		}
-		if(pathDisplay){
-			drawPath(g);
-		}
+	}
+	/**
+	 * Draws the player
+	 * @param g
+	 */
+	private void drawPlayer(Graphics g){
+		g.drawImage(mazeModel.getPlayer().getPlayer(), 
+				mazeModel.getPlayer().getX() * tileSize ,
+				mazeModel.getPlayer().getY() * tileSize , null);
 	}
 	
+	/**
+	 * Draws the maze by drawing the tiles and then the walls
+	 * @param g
+	 */
 	
-	public void drawMaze(Graphics g){
+	private void drawMaze(Graphics g){
+	
 		Graphics2D g2d = (Graphics2D) g;
+		
 		for (int y = 0; y < mapHeight; y++) {
 			for (int x = 0; x < mapWidth; x++) {
-				//System.out.println("printing " + testMaze.getCell(x, y));
-				Node cell = mazeModel.getCell(x, y);
 				g2d.drawImage(map.getWoodImg(),x*tileSize, y*tileSize, null);
-				//g.drawImage(map.getGrass(), x*10, y*10, null);
-				if(!cell.isConnected(0, -1)){
+			}
+		}
+		g2d.setStroke(new BasicStroke(4));
+		for (int y = 0; y < mapHeight; y++) {
+			for (int x = 0; x < mapWidth; x++) {
+				Node cell = mazeModel.getCell(x, y);
+				if(!cell.isConnected(0, -1)){                                                    //draws the north wall
 					g2d.drawLine(x*tileSize, y*tileSize, (x+1)*tileSize , y*tileSize);
 				}
 				if(!cell.isConnected(0, 1)){
-					g2d.drawLine(x*tileSize, (y+1)*tileSize, (x+1)*tileSize, (y+1)*tileSize);
+					g2d.drawLine(x*tileSize, (y+1)*tileSize, (x+1)*tileSize, (y+1)*tileSize);	//draws the south wall
 				}
 				if(!cell.isConnected(1, 0)){
-					g2d.drawLine((x+1)*tileSize, (y)*tileSize, (x+1)*tileSize, (y+1)*tileSize);
+					g2d.drawLine((x+1)*tileSize, (y)*tileSize, (x+1)*tileSize, (y+1)*tileSize);	//draws the east wall
 				}
 				if(!cell.isConnected(-1, 0)){
-					g2d.drawLine((x)*tileSize, (y)*tileSize, (x)*tileSize, (y+1)*tileSize);
+					g2d.drawLine((x)*tileSize, (y)*tileSize, (x)*tileSize, (y+1)*tileSize);	    //draws the west wall
 				}
-					
-	
 			}
 		}
+		
 	}
 	
-	public void drawMask(Graphics g){
+	/**
+	 * Draws a black rectangle with a hole of a diameter proportional to the fuel of the player
+	 * @param g
+	 */
+	
+	private void drawMask(Graphics g){
 		Graphics2D g2d  = (Graphics2D) g;
 		BufferedImage image = new BufferedImage(mapWidth*tileSize, mapHeight*tileSize, BufferedImage.TYPE_INT_ARGB);
 		
@@ -135,7 +169,11 @@ public class Board extends JPanel implements ActionListener{
 		g2d.drawImage(image, 0, 0, this);
 	}
 	
-	
+	/**
+	 * Local KeyAdapter for listening to the board
+	 * @author mtom521
+	 *
+	 */
 	
 	public class Al extends KeyAdapter {
 		
@@ -165,22 +203,27 @@ public class Board extends JPanel implements ActionListener{
 	}
 
 
-
-	public void activateSurvival() {
-		survivalOn = true;
-		
-	}
-
+	/**
+	 * multiplies the mapWidth by the tileSize
+	 * @return the pixel width of the board
+	 */
 	public int getPixelWidth() {
-		return (mapWidth+1)*tileSize;
+		return (mapWidth)*tileSize;
 	}
 	
+	/**
+	 * multiplies the mapHeight by the tileSize
+	 * @return the pixel height of the board
+	 */
 	public int getPixelHeight() {
-		return (mapHeight+1)*tileSize;
+		return (mapHeight)*tileSize;
 	}
 	
 	
-	
+	/**
+	 * Generates a path and draws it using Graphics2D draw Line
+	 * @param g Graphics
+	 */
 	
 	public void drawPath(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
@@ -192,8 +235,17 @@ public class Board extends JPanel implements ActionListener{
 			g2d.drawLine(path.get(i).getxPos()*tileSize + tileSize/2, path.get(i).getyPos()*tileSize + tileSize/2, 
 						path.get(i+1).getxPos()*tileSize + tileSize/2, path.get(i+1).getyPos()*tileSize + tileSize/2);
 		}
-		System.out.println(path);
 	}
 	
 	
+	private Timer timer;
+	private Map map;
+	private MazeImp mazeModel;
+	
+	private boolean pathDisplay;
+	
+	private static int tileSize = 25;
+	private static int playerSize = 10;
+	private int mapWidth;
+	private int mapHeight;
 }

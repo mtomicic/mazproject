@@ -1,21 +1,28 @@
-import java.awt.geom.RectangularShape;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.EventObject;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Random;
-
 import javax.swing.event.EventListenerList;
-
-
-
-
+/**
+ * Maze Model Class
+ * @author mtom521
+ *
+ */
 public class MazeImp{
 	
-
+	/**
+	 * MazeImp Constructor
+	 * Generates a maze of size x,y 
+	 * adds a player at position 0,0
+	 * sets the start to 0,0
+	 * sets the end to x-1,y-1
+	 * If you want to change any of these settings use the various setters
+	 * @param x xSize
+	 * @param y ySize
+	 */
 	public MazeImp(int x, int y){
 		xSize = x;
 		ySize = y;
@@ -29,17 +36,25 @@ public class MazeImp{
 		frontier = new ArrayList<Node>();
 		this.generate();
 		mazeListeners = new EventListenerList();
-		start = grid[0][0];
+		
 		player = new Player(0,0);
-		//System.out.print("yolo" + player.getFuel());
-		Random rn = new Random();
-		int i = rn.nextInt(xSize);
-		int j = rn.nextInt(ySize);
-		end = grid[xSize-1][ySize-1];
+		
 		fuels = new ArrayList<Fuel>();
-		addFuel(100);
+		survival = false;
+		
+		start = grid[0][0];
+		end = grid[xSize-1][ySize-1];
 	}
-	
+	/**
+	 * generates the maze using a Randomised Primm's algorithm
+	 * Steps
+	 * choose a random cell and mark it
+	 * add all its neighbours to the frontier
+	 * pick a random node in the frontier, add its neighbours to the frontier
+	 * connect it to the maze
+	 * if there is more than 1 way to connect it to the maze randomly choose
+	 * choose another random node from the frontier and repeat
+	 */
 	private void generate(){
 		Random rn = new Random();
 		int x = rn.nextInt(xSize);
@@ -86,14 +101,17 @@ public class MazeImp{
 				//System.out.println("neighbour :" + neighbour);
 			}
 		}
-		//addTreasure();
 	}
 	
-	public void addLoops(int percentage){
+	/**
+	 * picks a random number nodes(based on the percentage) and removes a random wall from them(even if there was no wall to begin with)
+	 * @param percentage number 1-100 
+	 */
+	public void removeWalls(int percentage){
 		Random rn = new Random();
 		for(int i = 1; i < xSize-1; i++){
 			for(int j = 1; j < ySize-1; j++){
-				if(rn.nextInt(100) < percentage){
+				if(rn.nextInt(200) < percentage){
 					int side = rn.nextInt(4);
 					if(side == 0){
 						grid[i][j].setNorth(grid[i][j-1]);
@@ -116,6 +134,11 @@ public class MazeImp{
 		}
 	}
 	
+	/**
+	 * marks a cell as in the maze and adds its neighbours to the frontier
+	 * @param x x position
+	 * @param y y position
+	 */
 	public void markCell(int x, int y){
 		grid[x][y].setInMaze();
 		addFrontier(x, y + 1);
@@ -125,6 +148,11 @@ public class MazeImp{
 		frontier.remove(grid[x][y]);
 	}
 	
+	/**
+	 * Adds the node at x,y to the frontier if it is valid, not already in the maze, and not already in the frontier
+	 * @param x x position
+	 * @param y y position
+	 */
 	private void addFrontier(int x, int y){
 		if(isValid(x,y)){
 			if(!frontier.contains(grid[x][y]) && !grid[x][y].isInMaze()){
@@ -133,6 +161,12 @@ public class MazeImp{
 		}
 	} 
 	
+	/**
+	 * checks if the node at x,y exists
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	private boolean isValid(int x, int y){
 		if(x >= 0 && y >= 0 && x < xSize && y < ySize){
 			return true;
@@ -140,6 +174,12 @@ public class MazeImp{
 		return false;
 	}
 	
+	/**
+	 * gets all the adjacent nodes to the node at (x,y) that are not in the maze
+	 * @param x x position
+	 * @param y y position
+	 * @return An ArrayList of Nodes containing the adjacent nodes
+	 */
 	private ArrayList<Node> getAdjacent(int x, int y){
 		ArrayList<Node> adj = new ArrayList<Node>();
 		//System.out.println("getting adjacent node to:" + grid[x][y]);
@@ -158,8 +198,11 @@ public class MazeImp{
 		//System.out.println("adj" +adj);
 		return adj;
 	}
-
-	public char[][] getCharMaze(){
+	/**
+	 * Outputs the maze as a 2d array of chars with explicit walls
+	 * @return a 2d array of chars
+	 */
+	private char[][] getCharMaze(){
 		char[][] charMaze = new char[2*xSize+1][2*ySize+1];
 		for(int i = 0; i < 2*xSize + 1; i++){
 			for(int j = 0; j < 2*ySize + 1; j++){
@@ -196,6 +239,9 @@ public class MazeImp{
 		return charMaze;
 	}
 	
+	/**
+	 * draws the maze in the console
+	 */
 	public void dumpMaze() {
 		int x = xSize;
 		int y = ySize;
@@ -224,42 +270,38 @@ public class MazeImp{
 		System.out.println();
 	}
 	
-	public void showPath(ArrayList<Node> path){
-		for(int i = 0; i < path.size() - 1; i++){
-			path.get(i).setPath(true);
-		}
-	}
 	
-	public void clearPath(ArrayList<Node> path){
-		for(int i = 0; i < path.size() - 1; i++){
-			path.get(i).setPath(false);
-		}
-	}
-	
-	
+	/**
+	 * Randomises the start tile to be in the upper left hand quadrant of the maze;
+	 */
 	public void randomStart(){
 		Random rn = new Random();
-		int x = rn.nextInt(xSize);
-		int y = rn.nextInt(ySize);
+		int x = rn.nextInt(xSize/2);
+		int y = rn.nextInt(ySize/2);
 		
 		start = grid[x][y];
+		player = new Player(x,y);
 	}
 	
-	public void randomEnd(Heuristic h){
+	/**
+	 * Randomises the end tile to be in the lower right hand quadrant of the maze;
+	 */
+	public void randomEnd(){
 		Random rn = new Random();
-		int x = rn.nextInt(xSize);
-		int y = rn.nextInt(ySize);
-		boolean done = false;
-		while(!done){
-			end = grid[x][y];
-			if(h.getH(start, end) > (xSize + ySize)/2){
-				done = true;
-			}
-		}
+		int x = rn.nextInt(xSize/2) + xSize/2;
+		int y = rn.nextInt(ySize/2) + ySize/2;
+		
+		end = grid[x][y];
+		
 	}
-	
 
-
+	/**
+	 * A star search implementation which finds the shortest path to the goal node
+	 * @param start starting node
+	 * @param goal goal node
+	 * @param h heuristic
+	 * @return an ArrayList of nodes containing the path 
+	 */
 	public ArrayList<Node> getPath(Node start, Node goal, Heuristic h){
 		PriorityQueue<State> open = new PriorityQueue<State>(11, new Comparator<State>(){
 		
@@ -274,14 +316,14 @@ public class MazeImp{
 			}
 			
 		});
-		HashSet<State> closedSet = new HashSet<State>();
+		HashSet<Node> closedSet = new HashSet<Node>();
 		
 		
 		open.add(new State(start, 0, h.getH(start, goal), null));
 		
 		while(!open.isEmpty()){
 			State curr = open.poll();
-			closedSet.add(curr);
+			closedSet.add(curr.getNode());
 			//System.out.println(curr.getNode());
 			if(curr.getNode().equals(goal)){
 				return constructPath(curr);
@@ -314,7 +356,11 @@ public class MazeImp{
 	
 	}
 	
-	
+	/**
+	 * Constructs the path from the last state
+	 * @param s the last state
+	 * @return an ArrayList of nodes containing the path 
+	 */
 	private ArrayList<Node> constructPath(State s){
 		ArrayList<Node> reversedPath = new ArrayList<Node>();
 		reversedPath.add(s.getNode());
@@ -330,7 +376,11 @@ public class MazeImp{
 		return path;
 	}
 	
-	private void addFuel(int value){
+	/**
+	 * randomly distributes fuel across the maze based on the percentage
+	 * @param value of the fuel to be added
+	 */
+	public void addFuel(int value){
 		Random rn = new Random();
 		
 		for(int i = 0; i < xSize; i++){
@@ -344,7 +394,11 @@ public class MazeImp{
 		}
 		
 	}
-	
+	/**
+	 * moves the player
+	 * @param dx direction x
+	 * @param dy direction y
+	 */
 	public void movePlayer(int dx, int dy){
 		if (playerCanMove(dx, dy)){
 			player.move(dx, dy);
@@ -364,14 +418,14 @@ public class MazeImp{
 		}
 	}
 	
-	private void fireTreasureCollected() {
-		MazeListener[] listeners = mazeListeners.getListeners(MazeListener.class);
-		EventObject e = new EventObject(this);
-		for(MazeListener listener:listeners){
-			listener.treasureCollected(e);
-		}
-	}
-
+	
+	
+	/**
+	 * checks if player can move in direction dx, dy
+	 * @param dx
+	 * @param dy
+	 * @return true if move is possible
+	 */
 	private boolean playerCanMove(int dx, int dy) {
 		Node pos = getCell(player.getX(), player.getY());
 		if(pos.isConnected(dx,dy)){
@@ -421,10 +475,13 @@ public class MazeImp{
 		}
 	}
 	
-	public int[] getWallType(int xPos, int yPos){  
-		return grid[xPos][yPos].getWalls();
+	private void fireTreasureCollected() {
+		MazeListener[] listeners = mazeListeners.getListeners(MazeListener.class);
+		EventObject e = new EventObject(this);
+		for(MazeListener listener:listeners){
+			listener.treasureCollected(e);
+		}
 	}
-	
 	
 	/**
 	 * @return the xSize
@@ -439,29 +496,81 @@ public class MazeImp{
 	public int getySize() {
 		return ySize;
 	}
-
+	
+	/**
+	 * gets the node at (x,y)
+	 * @param x x position
+	 * @param y y position
+	 * @return the node at (x,y)
+	 */
 	public Node getCell(int x, int y){
 		return grid[x][y];
 	}
 	
+	/**
+	 * @return the player of this maze
+	 */
 	public Player getPlayer() {
-		// TODO Auto-generated method stub
 		return player;
 	}
 	
+	/**
+	 * sets the player for this maze
+	 * @param player player to be set
+	 */
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
+	
+	/**
+	 * makes the player consume fuel
+	 */
 	
 	public void consumeFuel(){
 		player.fuelDecrement();
 		fireFuelConsumed();
 	}
 	
+	/**
+	 * gets the ArrayList of fuels
+	 * @return fuels
+	 */
 	public ArrayList<Fuel> getFuel() {
 		return (ArrayList<Fuel>) fuels.clone();
 	}
 
+	/**
+	 * gets the end node
+	 * @return the end node
+	 */
+	public Node getEnd() {
+		return end;
+	}
+	
+	/**
+	 * turn survival on
+	 */
+	
+	public void activateSurvival(){
+		survival = true;
+	}
+	
+	/**
+	 * turn survival off
+	 */
+	public void deactivateSurvival(){
+		survival = false;
+	}
+	
+	/**
+	 * checks whether survival mode is on or off
+	 * @return true if survival is on
+	 */
+	public boolean survivalOn(){
+		return survival;
+	}
+	
+	boolean survival;
 	Node start;
 	Node end;
 	int xSize;
@@ -470,14 +579,5 @@ public class MazeImp{
 	Node[][] grid;
 	EventListenerList mazeListeners;
 	private Player player;
-	
-
 	private ArrayList<Fuel> fuels;
-
-
-	public Node getEnd() {
-		return end;
-	}
-
-	
 }

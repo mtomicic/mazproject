@@ -1,7 +1,16 @@
 import java.util.ArrayList;
 
-
+/**
+ * Maze Node
+ * @author mtom521
+ *
+ */
 public class Node {
+	/**
+	 * Node Constructor
+	 * @param x
+	 * @param y
+	 */
 	public Node(int x, int y){
 		north = null;
 		south = null;
@@ -10,8 +19,6 @@ public class Node {
 		xPos = x;
 		yPos = y;
 		inMaze = false;
-		treasure = false;
-		path = false;
 	}
 	
 	
@@ -82,45 +89,14 @@ public class Node {
 		inMaze = true;
 	}
 
-	public boolean isTreasure() {
-		return treasure;
-	}
 
-	public void setTreasure(boolean treasure) {
-		this.treasure = treasure;
-	}
+
 
 	/**
 	 * @return the inMaze
 	 */
 	public boolean isInMaze() {
 		return inMaze;
-	}
-	
-	public int[] getWalls(){
-		//ArrayList<Character> connections = new ArrayList<Character>();
-		int[] connections = new int[4];
-		if(this.isConnected(0, -1)){//wall
-			connections[3] = 0;
-		} else {
-			connections[3] = 1;
-		}
-		if(this.isConnected(1, 0)){
-			connections[2] = 0;
-		} else {
-			connections[2] = 1;
-		}
-		if(this.isConnected(0, 1)){
-			connections[1] = 0;
-		} else {
-			connections[1] = 1;
-		}
-		if(this.isConnected(-1, 0)){
-			connections[0] = 0;
-		} else {
-			connections[0] = 1;
-		}
-		return connections;
 	}
 	
 	
@@ -175,13 +151,7 @@ public class Node {
 		return false;
 	}
 	
-	public void setPath(boolean p) {
-		path = p;
-	}
-	
-	public boolean isOnPath() {
-		return path;
-	}
+
 	@Override
 	public boolean equals(Object o){
 		if(((Node) o).getxPos() == this.xPos && ((Node) o).getyPos() == this.yPos){
@@ -215,17 +185,10 @@ public class Node {
 	}
 	
 	boolean inMaze;
-	boolean treasure;
-	boolean path;
 	Node north;
 	Node south;
 	Node east;
 	Node west;
 	int xPos;
 	int yPos;
-	
-
-	
-	
-	
 }

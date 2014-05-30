@@ -12,6 +12,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import java.beans.PropertyChangeListener;
 import java.util.EventObject;
 
 import javax.swing.AbstractAction;
@@ -29,6 +30,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.text.DefaultCaret;
 
 public class MazeFrame extends JFrame{
@@ -54,6 +56,9 @@ public class MazeFrame extends JFrame{
 		initDifficultyScreen();
 		initHowPlayScreen();
 		initWinScreen();
+		initLoseScreen();
+//		createPuaseFrame();
+		initPauseScreen();
 		initCardLayout();
 		
 		this.setSize(463,390);
@@ -80,7 +85,24 @@ public class MazeFrame extends JFrame{
 		winScreen.requestFocus();
 		timer.restart();
 		timer.stop();
-		winTimeLabel.setText("Your time was " + timeCount + " seconds");
+		winTimeLabel.setText("Your time was " + currentTime + " seconds");
+	//	winScoreLabel.setText("Your score was " + maze.getPlayer().getFuel());
+		timeCount = 0;
+		timeLabel.setText(timeCount + " sec");
+		howToPlay.setVisible(false);
+		frame.setMinimumSize(new Dimension(463,390));
+		frame.pack();
+	}
+	
+	
+	public void showLose(){
+		if(board != null){
+			gameScreen.remove(board);
+		}
+		layout.show(mainPanel, "lose");
+		loseScreen.requestFocus();
+		timer.restart();
+		timer.stop();
 	//	winScoreLabel.setText("Your score was " + maze.getPlayer().getFuel());
 		timeCount = 0;
 		timeLabel.setText(timeCount + " sec");
@@ -97,6 +119,8 @@ public class MazeFrame extends JFrame{
 		mainPanel.add(difficultyScreen, "diff");
 		mainPanel.add(howPlayScreen, "howPlay");
 		mainPanel.add(winScreen, "win");
+		mainPanel.add(loseScreen, "lose");
+		mainPanel.add(pauseScreen, "pause");
 	}
 	
 	private void initGameScreen(){
@@ -121,11 +145,12 @@ public class MazeFrame extends JFrame{
 		 ActionListener timerListener = new ActionListener() {
 		        public void actionPerformed(ActionEvent actionEvent) {
 		        	if (timeCount < 9999){
-		        		long currentTime =  System.currentTimeMillis() - timeStart;
+		        		currentTime =  System.currentTimeMillis() - timeStart;
 		        		currentTime = currentTime/1000;
 		        		timeLabel.setText(currentTime + " sec");
-			
-			        	maze.consumeFuel();
+		        		
+		        		maze.consumeFuel();
+		        		
 			        	scoreLabel.setText("Fuel: " + new DecimalFormat("#").format(maze.getPlayer().getFuel()));
 		
 		        	} else {
@@ -158,19 +183,21 @@ public class MazeFrame extends JFrame{
 		gc.weightx = 0;
 		gc.weighty = 1;
 		gameMenu.add(helpButton, gc);
+		
+		JButton pauseButton = new JButton(showPause);
 		gc.gridy = 2;
+		gc.weighty = 2;
+		gc.ipady = 20;
+		gameMenu.add(pauseButton, gc);
+		
+		gc.gridy = 3;
 		gc.weighty = 100;
 		gc.ipady = 0;
 		gameMenu.add(scoreLabel, gc);
-		gc.gridy = 3;
+		gc.gridy = 4;
 		gc.weighty = 200;
 		gameMenu.add(timeLabel,gc);
 		gameScreen.add(gameMenu, BorderLayout.LINE_END);
-		
-		JButton pauseButton = new JButton(pauseScreen);
-		gc.gridy = 4;
-		gc.weighty = 300;
-		gameMenu.add(pauseButton, gc);
 	}
 	
 	private void initDifficultyScreen(){
@@ -247,7 +274,7 @@ public class MazeFrame extends JFrame{
 		JLabel winLabel = new JLabel("YOU WIN!!", SwingConstants.CENTER);
 		winLabel.setFont(new Font(winLabel.getFont().getName(), Font.BOLD, 30));
 		winLabel.setForeground(Color.YELLOW);
-		winTimeLabel = new JLabel("Your time was " + timeCount + " seconds", SwingConstants.CENTER);
+		winTimeLabel = new JLabel("Your time was " + currentTime + " seconds", SwingConstants.CENTER);
 		winTimeLabel.setForeground(Color.YELLOW);
 		//winScoreLabel = new JLabel("Your score was " + 0, SwingConstants.CENTER);
 		//winScoreLabel .setForeground(Color.YELLOW);
@@ -276,6 +303,45 @@ public class MazeFrame extends JFrame{
 		winScreen.add(menuButton, gc);
 	}
 	
+	
+	private void initLoseScreen(){
+		loseScreen = new JPanel();
+		loseScreen.setLayout(new GridBagLayout());
+		GridBagConstraints gc =  new GridBagConstraints();
+		gc.anchor = GridBagConstraints.CENTER;
+		loseScreen.setBackground(Color.GRAY);
+		JLabel loseLabel = new JLabel("YOU LOSE!!", SwingConstants.CENTER);
+		loseLabel.setFont(new Font(loseLabel.getFont().getName(), Font.BOLD, 30));
+		loseLabel.setForeground(Color.YELLOW);
+		JLabel loseLabelFuel = new JLabel("You Ran Out Of Fuel", SwingConstants.CENTER);
+		loseLabelFuel.setForeground(Color.YELLOW);
+		//winScoreLabel = new JLabel("Your score was " + 0, SwingConstants.CENTER);
+		//winScoreLabel .setForeground(Color.YELLOW);
+		gc.ipadx = 78;
+		gc.ipady = 20;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.gridy = 0;
+//		gc.weighty = 1;
+		loseScreen.add(loseLabel, gc);
+		gc.gridy = 1;
+		gc.ipady = 0;
+		loseScreen.add(loseLabelFuel, gc);
+		gc.gridy = 2;
+		gc.ipady = 20;
+		//winScreen.add(winScoreLabel, gc);
+		gc.gridy = 3;
+		gc.ipady = 20;
+		JButton playAgain = new JButton(goDifficultySelect);
+		playAgain.setText("Play Again");
+		loseScreen.add(playAgain, gc);
+		
+		JButton menuButton = new JButton(goMenu);
+		gc.gridy = 4;
+		gc.ipadx = 76;
+		loseScreen.add(menuButton, gc);
+		
+	}
+	
 	private void initHowPlayScreen(){
 		howPlayScreen = new JPanel();
 		howPlayScreen.setLayout(new GridBagLayout());
@@ -301,6 +367,45 @@ public class MazeFrame extends JFrame{
 		howPlayScreen.add(retMainMenu, gc);
 	}
 
+	
+	private void initPauseScreen(){
+		pauseScreen = new JPanel();
+		pauseScreen.setLayout(new GridBagLayout());
+		GridBagConstraints gc =  new GridBagConstraints();
+		gc.anchor = GridBagConstraints.CENTER;
+		pauseScreen.setBackground(Color.GRAY);
+		pauseTimeLabel = new JLabel("Your time so far is " + currentTime + " seconds", SwingConstants.CENTER);
+		pauseTimeLabel.setForeground(Color.YELLOW);
+		//winScoreLabel = new JLabel("Your score was " + 0, SwingConstants.CENTER);
+		//winScoreLabel .setForeground(Color.YELLOW);
+		timeCount = 0;
+		gc.ipadx = 78;
+		gc.ipady = 20;
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.gridy = 0;
+		JLabel pauseLabel = new JLabel("Paused", SwingConstants.CENTER);
+		pauseLabel.setForeground(Color.YELLOW);
+		pauseLabel.setFont(new Font(pauseLabel.getFont().getName(), Font.BOLD, 30));
+		pauseScreen.add(pauseLabel, gc);
+//		gc.weighty = 1;
+		gc.gridy = 1;
+		gc.ipady = 0;
+		pauseScreen.add(pauseTimeLabel, gc);
+		gc.gridy = 2;
+		gc.ipady = 20;
+		//winScreen.add(winScoreLabel, gc);
+		gc.gridy = 3;
+		gc.ipady = 20;
+		JButton resume = new JButton(resumeGame);
+		gc.ipadx = 90;
+		pauseScreen.add(resume, gc);
+		
+		JButton menuButton = new JButton(goMenu);
+		gc.gridy = 4;
+		gc.ipadx = 76;
+		pauseScreen.add(menuButton, gc);
+	}
+	
 	private void initActions() {
 		goDifficultySelect = new AbstractAction("Play"){
 			@Override
@@ -318,14 +423,15 @@ public class MazeFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				timer.start();
 				timeStart = System.currentTimeMillis();
-				maze = new MazeImp(6,6);
+				maze = new MazeImp(15,15);
 				board = new Board(maze);
+				maze.addFuel(10);
 				maze.addMazeListener(new boardListener());
 				gameScreen.add(board, BorderLayout.CENTER);
 				layout.show(mainPanel, "game");
 				menuScreen.requestFocusInWindow();
 				gameScreen.getComponent(1).requestFocus();
-				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()));
+				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 200,board.getPixelHeight() + 150));
 				//frame.setSize(new Dimension(463,390));
 				frame.pack();
 			}
@@ -340,6 +446,10 @@ public class MazeFrame extends JFrame{
 				timeStart = System.currentTimeMillis();
 				maze = new MazeImp(25,25);
 				board = new Board(maze);
+				maze.randomStart();
+				maze.randomEnd();
+				maze.removeWalls(5);
+				maze.addFuel(10);
 				//board.activateSurvival();
 				maze.addMazeListener(new boardListener());
 				gameScreen.add(board, BorderLayout.CENTER);
@@ -347,7 +457,7 @@ public class MazeFrame extends JFrame{
 				layout.show(mainPanel, "game");
 				menuScreen.requestFocusInWindow();
 				gameScreen.getComponent(1).requestFocus();
-				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()));
+				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 200,board.getPixelHeight() + 150));
 				//frame.setSize(new Dimension(463,390));
 				frame.pack();
 			}
@@ -359,18 +469,18 @@ public class MazeFrame extends JFrame{
 				timer.start();
 				timeStart = System.currentTimeMillis();
 				maze = new MazeImp(25,25);
-				//maze.randomEnd(new ManhattenHeuristic());
+				maze.randomEnd();
 				maze.setPlayer(new Player(0,0,0.02));
-				//maze.addLoops(10);
 				board = new Board(maze);
-				board.activateSurvival();
+				maze.activateSurvival();
+				maze.addFuel(100);
 				maze.addMazeListener(new boardListener());
 				gameScreen.add(board, BorderLayout.CENTER);
 				gameScreen.setBackground(Color.GRAY);
 				layout.show(mainPanel, "game");
 				menuScreen.requestFocusInWindow();
 				gameScreen.getComponent(1).requestFocus();
-				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()));
+				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 150,board.getPixelHeight()+ 150));
 				frame.pack();
 			}
 		};
@@ -390,6 +500,8 @@ public class MazeFrame extends JFrame{
 				timeLabel.setText(timeCount + " sec");
 				scoreLabel.setText("Fuel: " + 0);
 				howToPlay.setVisible(false);
+				frame.setSize(463,390);
+				frame.setMinimumSize(new Dimension(463,390));
 				//frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()));
 				frame.pack();
 			}
@@ -399,9 +511,10 @@ public class MazeFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				board.displayPath();
+				board.repaint();
 				gameScreen.getComponent(1).requestFocus();
-				timeCount +=20;
-				timeLabel.setText(timeCount + " sec");
+//				timeCount +=20;
+//				timeLabel.setText(timeCount + " sec");
 				frame.pack();
 			}
 			
@@ -428,55 +541,36 @@ public class MazeFrame extends JFrame{
 			}
 		};
 		
-		pauseScreen = new AbstractAction("Pause") {
+		showPause = new AbstractAction("Pause") {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				createFrame();
+				frame.setMinimumSize(new Dimension(463,390));
+				layout.show(mainPanel, "pause");
+				pauseTimeLabel.setText("Your time so far is " + currentTime + " seconds");
+				pauseScreen.requestFocus();
+                timer.stop();
+                frame.pack();
+//                frame.setVisible(false);
+			}
+		};
+		
+		
+		resumeGame = new AbstractAction("Resume"){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				layout.show(mainPanel, "game");
+				timer.start();
+				menuScreen.requestFocusInWindow();
+				gameScreen.getComponent(1).requestFocus();
+				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()+ 20));
+				frame.pack();
+//				frame.setVisible(true);
 			}
 		};
 	}
 	
-	public static void createFrame() {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                JFrame frame = new JFrame("Pause Menu");
-                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                try {
-                   UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } catch (Exception e) {
-                   e.printStackTrace();
-                }
-                JPanel panel = new JPanel();
-                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-                panel.setOpaque(true);
-                JTextArea textArea = new JTextArea(15, 50);
-                textArea.setWrapStyleWord(true);
-                textArea.setEditable(false);
-                textArea.setFont(Font.getFont(Font.SANS_SERIF));
-                JScrollPane scroller = new JScrollPane(textArea);
-                scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-                scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-                JPanel inputpanel = new JPanel();
-                inputpanel.setLayout(new FlowLayout());
-                JTextField input = new JTextField(20);
-                JButton button = new JButton("Enter");
-                DefaultCaret caret = (DefaultCaret) textArea.getCaret();
-                caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-                panel.add(scroller);
-                inputpanel.add(input);
-                inputpanel.add(button);
-                panel.add(inputpanel);
-                frame.getContentPane().add(BorderLayout.CENTER, panel);
-                frame.pack();
-                frame.setLocationByPlatform(true);
-                frame.setVisible(true);
-                frame.setResizable(false);
-                input.requestFocus();
-                frame.setLocationRelativeTo(null);
-            }
-        });
-    }
+	
+
 	
 	
 	public class boardListener implements MazeListener{
@@ -511,6 +605,7 @@ public class MazeFrame extends JFrame{
 		public void fuelConsumed(EventObject e) {
 			board.repaint();
 		}
+		
 	}
 	
 	private JPanel mainPanel;
@@ -519,6 +614,8 @@ public class MazeFrame extends JFrame{
 	private JPanel difficultyScreen;
 	private JPanel howPlayScreen;
 	private JPanel winScreen;
+	private JPanel loseScreen;
+	private JPanel pauseScreen;
 
 	private Action goDifficultySelect;
 	private Action goEasy;
@@ -528,7 +625,8 @@ public class MazeFrame extends JFrame{
 	private Action drawPath;
 	private Action goHowPlay;
 	private Action exitGame;
-	private Action pauseScreen;
+	private Action showPause;
+	private static Action resumeGame;
 
 	private Board board;
 	private MazeImp maze;
@@ -538,10 +636,15 @@ public class MazeFrame extends JFrame{
 	private int timeCount = 0;
 	private final JLabel timeLabel = new JLabel(timeCount + " sec", SwingConstants.RIGHT);
 	private JLabel scoreLabel;
-	private Timer timer;
+	private static Timer timer;
 	private long timeStart;
+	long currentTime;
 	
 	private JTextArea howToPlay;
 	private JLabel winTimeLabel;
 	private JLabel winScoreLabel;
+	
+//	private static JFrame pauseFrame; 
+	private JLabel pauseTimeLabel;
+	
 }
