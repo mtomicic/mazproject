@@ -34,6 +34,7 @@ public class MazeFrame extends JFrame{
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run(){
+		
 			new MazeFrame();
 		}
 		
@@ -105,7 +106,6 @@ public class MazeFrame extends JFrame{
 		scoreLabel = new JLabel("Fuel: " + 0);
 		//retMainMenu.setSize(20, 20);
 		//helpButton.setSize(20, 20);
-		
 		//Timer time = new Tim
 
 		
@@ -120,8 +120,10 @@ public class MazeFrame extends JFrame{
 		 ActionListener timerListener = new ActionListener() {
 		        public void actionPerformed(ActionEvent actionEvent) {
 		        	if (timeCount < 9999){
-		        		timeLabel.setText(timeCount + " sec");
-			        	timeCount++;
+		        		long currentTime =  System.currentTimeMillis() - timeStart;
+		        		currentTime = currentTime/1000;
+		        		timeLabel.setText(currentTime + " sec");
+			
 			        	maze.consumeFuel();
 			        	System.out.print(maze.getPlayer().getFuel());
 			        	scoreLabel.setText("Fuel: " + maze.getPlayer().getFuel());
@@ -134,7 +136,7 @@ public class MazeFrame extends JFrame{
 		        }
 		};
 		
-		timer = new Timer(100, timerListener);
+		timer = new Timer(50, timerListener);
 		    
 		    
 		JPanel gameMenu = new JPanel();
@@ -247,8 +249,8 @@ public class MazeFrame extends JFrame{
 		winLabel.setForeground(Color.YELLOW);
 		winTimeLabel = new JLabel("Your time was " + timeCount + " seconds", SwingConstants.CENTER);
 		winTimeLabel.setForeground(Color.YELLOW);
-		winScoreLabel = new JLabel("Your score was " + 0, SwingConstants.CENTER);
-		winScoreLabel .setForeground(Color.YELLOW);
+		//winScoreLabel = new JLabel("Your score was " + 0, SwingConstants.CENTER);
+		//winScoreLabel .setForeground(Color.YELLOW);
 		timeCount = 0;
 		gc.ipadx = 78;
 		gc.ipady = 20;
@@ -261,7 +263,7 @@ public class MazeFrame extends JFrame{
 		winScreen.add(winTimeLabel, gc);
 		gc.gridy = 2;
 		gc.ipady = 20;
-		winScreen.add(winScoreLabel, gc);
+		//winScreen.add(winScoreLabel, gc);
 		gc.gridy = 3;
 		gc.ipady = 20;
 		JButton playAgain = new JButton(goDifficultySelect);
@@ -315,6 +317,7 @@ public class MazeFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				timer.start();
+				timeStart = System.currentTimeMillis();
 				maze = new MazeImp(15,15);
 				board = new Board(maze);
 				maze.addMazeListener(new boardListener());
@@ -329,9 +332,12 @@ public class MazeFrame extends JFrame{
 		};
 		
 		goMedium = new AbstractAction("Medium"){
+	
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				timer.start();
+				timeStart = System.currentTimeMillis();
 				maze = new MazeImp(25,25);
 				board = new Board(maze);
 				//board.activateSurvival();
@@ -351,8 +357,9 @@ public class MazeFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				timer.start();
+				timeStart = System.currentTimeMillis();
 				maze = new MazeImp(25,25);
-				maze.randomEnd(new ManhattenHeuristic());
+				//maze.randomEnd(new ManhattenHeuristic());
 				maze.setPlayer(new Player(0,0,4));
 				//maze.addLoops(10);
 				board = new Board(maze);
@@ -530,6 +537,7 @@ public class MazeFrame extends JFrame{
 	private final JLabel timeLabel = new JLabel(timeCount + " sec", SwingConstants.RIGHT);
 	private JLabel scoreLabel;
 	private Timer timer;
+	private long timeStart;
 	
 	private JTextArea howToPlay;
 	private JLabel winTimeLabel;

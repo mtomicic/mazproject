@@ -27,6 +27,7 @@ public class Board extends JPanel implements ActionListener{
 	private static int tileSize = 25;
 	private static int playerSize = 10;
 	private static int treasureSize = 4;
+
 	
 	public Board(MazeImp m) {
 		mapWidth = m.getxSize();
@@ -43,6 +44,7 @@ public class Board extends JPanel implements ActionListener{
 		timer = new Timer(25, this);
 		timer.start();
 		survivalOn = false;
+		
 	}
 	
 	@Override
@@ -63,8 +65,8 @@ public class Board extends JPanel implements ActionListener{
 		
 
 		g.drawImage(mazeModel.getPlayer().getPlayer(), 
-					mazeModel.getPlayer().getX() * tileSize + (tileSize - playerSize)/2,
-					mazeModel.getPlayer().getY() * tileSize + (tileSize - playerSize)/2, null);
+					mazeModel.getPlayer().getX() * tileSize ,
+					mazeModel.getPlayer().getY() * tileSize , null);
 		
 		ArrayList<Fuel> fuels= mazeModel.getFuel();
 		for(Fuel t: fuels){
@@ -129,11 +131,12 @@ public class Board extends JPanel implements ActionListener{
 			int keyCode = e.getKeyCode();
 			//System.out.println(mazeModel.getCell(mazeModel.getPlayer().getX(), mazeModel.getPlayer().getY()));
 			if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
-				mazeModel.movePlayer(0, -1);			
+				mazeModel.movePlayer(0, -1);
 			} else if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
-				mazeModel.movePlayer(0, 1);			
+				mazeModel.movePlayer(0, 1);	
 			} else if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
-				mazeModel.movePlayer(-1, 0);			
+				mazeModel.movePlayer(-1, 0);
+		
 			} else if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
 				mazeModel.movePlayer(1, 0);		
 			}

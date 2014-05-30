@@ -331,7 +331,7 @@ public class MazeImp{
 		
 		for(int i = 0; i < xSize; i++){
 			for(int j = 0; j < ySize; j++){
-				if(grid[i][j].isDeadEnd()){
+				if(grid[i][j].isDeadEnd() && !grid[i][j].equals(start) && !grid[i][j].equals(end)){
 					if(rn.nextInt(100) >= 75){
 						fuels.add(new Fuel(i,j, value));
 					}

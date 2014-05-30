@@ -18,15 +18,15 @@ public class Player extends MazeObject{
 	
 	public Player(int x, int y) {
 		super(x,y);
-		ImageIcon img = new ImageIcon("images/bert2_10.jpg");
+		ImageIcon img = new ImageIcon("images/player_new.png");
 		player = img.getImage();
 		fuel = 100;
-		fuelRate = 5;
+		fuelRate = 1;
 	}
 	
 	public Player(int x, int y, int fr) {
 		super(x,y);
-		ImageIcon img = new ImageIcon("images/bert2_10.jpg");
+		ImageIcon img = new ImageIcon("images/player_new.png");
 		player = img.getImage();
 		fuel = 100;
 		fuelRate = fr;
@@ -57,7 +57,7 @@ public class Player extends MazeObject{
 	}
 	
 	public void fuelDecrement() {
-		if(fuel > 50){
+		if(fuel > 51){
 			fuel -= fuelRate;
 		}
 	};
