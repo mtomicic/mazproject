@@ -703,11 +703,12 @@ public class MazeFrame extends JFrame{
 		showPause = new AbstractAction("Pause") {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				pauseTime = System.currentTimeMillis();
+                timer.stop();
 				frame.setMinimumSize(new Dimension(463,390));
 				layout.show(mainPanel, "pause");
 				pauseTimeLabel.setText("Your time so far is " + currentTime + " seconds");
 				pauseScreen.requestFocus();
-                timer.stop();
                 frame.pack();
 //                frame.setVisible(false);
 			}
@@ -722,6 +723,7 @@ public class MazeFrame extends JFrame{
 				menuScreen.requestFocusInWindow();
 				gameScreen.getComponent(1).requestFocus();
 				frame.setMinimumSize(new Dimension(board.getPixelWidth() + 100,board.getPixelHeight()+ 20));
+				timeStart = timeStart + (System.currentTimeMillis() - pauseTime);
 				frame.pack();
 //				frame.setVisible(true);
 			}
@@ -832,7 +834,8 @@ public class MazeFrame extends JFrame{
 	private JLabel scoreLabel;
 	private static Timer timer;
 	private long timeStart;
-	long currentTime;
+	private long currentTime;
+	private long pauseTime;
 	
 	private JTextArea howToPlay;
 	private JLabel winTimeLabel;
